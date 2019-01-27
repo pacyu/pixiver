@@ -1,0 +1,13 @@
+# IDE Files
+.idea/
+#Pycharm stuff
+.idea/*
+
+run.py
+
+# images
+*.jpe?g
+*.png
+
+# 
+__pycache__/*
