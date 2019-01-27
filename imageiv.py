@@ -197,6 +197,20 @@ class PixivImage(baseiv.ConfigHeaders):
             )
         return self.user_comments
 
+    def save_original(self):
+        illust_url = self.original_url()
+        illust_name = illust_url.split('/')[-1]
+        self.headers = {
+            'Referer': 'https://www.pixiv.net/member_illust.php?'
+                       'mode=medium&illust_id=' + self.illust_id(),
+            'User-Agent': self.user_agent
+        }
+        with open(illust_name, 'wb') as f:
+            rg = requests.get(illust_url, headers=self.headers,
+                              timeout=2)
+            f.write(rg.content)
+        print('Saved!')
+
 
 class DailyImages(baseiv.BaseQueue):
 
@@ -428,3 +442,23 @@ class Rookie(Daily):
 class Original(Daily):
     init_url = 'https://www.pixiv.net/ranking.php?' \
                'mode=original'
+
+
+class Male(Daily):
+    init_url = 'https://www.pixiv.net/ranking.php?' \
+               'mode=male'
+
+
+class Female(Daily):
+    init_url = 'https://www.pixiv.net/ranking.php?' \
+               'mode=female'
+
+
+class MaleR(Daily):
+    init_url = 'https://www.pixiv.net/ranking.php?' \
+               'mode=male_r18'
+
+
+class FemaleR(Daily):
+    init_url = 'https://www.pixiv.net/ranking.php?' \
+               'mode=female_r18'

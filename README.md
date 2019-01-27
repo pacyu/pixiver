@@ -1,25 +1,54 @@
 pixiver
 =======
 
-[![logo1](https://img.shields.io/badge/python-3.6.7-blue.svg)](https://www.python.org/downloads)
-[![logo2](https://img.shields.io/badge/requests-2.20.1-green.svg)](https://pypi.org/project/requests/)
-![logo6](https://img.shields.io/badge/platform-win7|win10-lightgrey.svg)
+这是一个面向 `pixiv` 的网络爬虫，您也可以将其作为当命令行版浏览使用。
 
-这是一个面向 `pixiv` 的网络爬虫
+目前还有一些功能尚未完成：
 
-您也可以将其作为当命令行版浏览使用
+    使用自己账户 cookie 来完成作品收藏、点赞功能、关注喜欢的作者。
+    
+    会员相关功能。
 
-note: 本地网络以及代理好的话效率是不错的，不然只能多试几次
-
-用例
+特点 & 用例
 ----
 
+可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、受男性欢迎 + R-18、受女性欢迎 + R-18排行。
+
+可浏览作品下的所有评论。
+
+可浏览作品标签、排名、点赞数、收藏数等信息。
+
+可下载作品：
+
+```
+>>> from imageiv import Daily
+>>> r = Daily(20190122)
+Crawler Initializing...
+Initialized!
+>>> gon = r.one()
+>>> gon['illust_attrs'].user_name()
+'河CY'
+>>> gon['rank']
+1
+>>> gon['illust_attrs'].original_url()
+'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+>>> gon['illust_attrs'].save_original()
+Saved!
+>>>
+```
+
+提供许多 api，可扩展到自己的项目。
+
 ```python
->>> from image import Daily, Weekly, Mouthly, Original, Rookie
->>> r = Daily(20190125)
->>> res = r.run()
-# 50 items
->>> res.batch().first()['illust_attrs'].imsize()
+>>> from imageiv import (
+Daily, Weekly, Mouthly, Original,
+Rookie, Male, Female, MaleR, FemaleR
+)
+>>> r = Daily()
+>>> res = r.run(20190125)
+Crawler Initializing...
+Initialized!
+>>> res.batch().first()['illust_attrs'].imsize() # 50 items
 (1228, 1736)
 >>> res.next().batch().first()['illust_attrs'].imsize()
 (1500, 1062)
@@ -50,10 +79,9 @@ note: 本地网络以及代理好的话效率是不错的，不然只能多试�
 {'tag_info': <image.ImageTag object at 0x00000000037ACE48>, 'romaji': 'orijinaru', 'translation': {'en': 'original'}}
 ...
 >>> r = Daily(20190125)
->>> s = r.run()
 Crawler Initializing...
 Initialized!
->>> g = s.one()
+>>> g = r.one()
 >>> g['illust_attrs'].view_count()
 108805
 >>> g['illust_attrs'].user_name()
