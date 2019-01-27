@@ -7,8 +7,10 @@
 run.py
 
 # images
-*.jpe?g
+*.jp*g
 *.png
 
 # some cache
+__pycache__/
+
 __pycache__/*
