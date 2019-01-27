@@ -142,6 +142,12 @@ Saved!
 
  + 提供许多 api，可扩展到自己的项目：
 
+为了保证对代理用户的使用性的良好，提供了两种方式浏览排行榜:
+
+1. 按批次加载：`batch()` 一次将加载排行榜 50 个进行处理。对于网络不好的使用者来说，这可能会很头痛。但我还提供了另外一个方法2。
+2. 一次一条加载：`one()` 一次加载排行榜的 1 个，并加入到队列中，这样依然能使用 `batch()` 一样的功能。
+
+ - `batch()`:
 ```python
 >>> from pixiver.imageiv import(
 Daily, Weekly, Mouthly, Original,
@@ -151,50 +157,109 @@ Rookie, Male, Female, MaleR, FemaleR
 >>> res = r.run(20190125)
 Crawler Initializing...
 Initialized!
->>> res.batch().first()['illust_attrs'].imsize() # 50 items
+
+### batch() 一次性加载 50 个对象
+b = b
+
+### 查看第一个图像尺寸
+
+>>> b.first()['illust_attrs'].imsize()
 (1228, 1736)
->>> res.next().batch().first()['illust_attrs'].imsize()
+
+### 查看下一个图像尺寸
+>>> b.next()['illust_attrs'].imsize()
 (1500, 1062)
->>> res.batch().first()['illust_attrs'].original_url()
+
+### 查看第一个作品原图链接
+>>> b.first()['illust_attrs'].original_url()
 'https://i.pximg.net/img-original/img/2019/01/24/00/00/05/72810724_p0.jpg'
->>> res.batch().first()['illust_attrs'].mini_url()
+
+### 查看第一个作品迷你图链接
+>>> b.first()['illust_attrs'].mini_url()
 'https://i.pximg.net/c/48x48/img-master/img/2019/01/24/00/00/05/72810724_p0_square1200.jpg'
->>> res.batch().first()['illust_attrs'].illust_title()
+
+### 作品标题
+>>> b.first()['illust_attrs'].illust_title()
 '森倉円初個展「Girl Friend」メインビジュアル'
->>> res.batch().first()['illust_attrs'].user_name()
+
+### 作者昵称
+>>> b.first()['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
->>> res.batch().first()['illust_attrs'].illust_id()
+
+### 作品 id
+>>> b.first()['illust_attrs'].illust_id()
 '72810724'
->>> res.batch().first()['illust_attrs'].create_date()
+
+### 作品创建日期（未作处理）
+>>> b.first()['illust_attrs'].create_date()
 '2019-01-23T15:00:05+00:00'
->>> res.batch().first()['illust_attrs'].upload_date()
+
+### 作品上传日期（未作处理）
+>>> b.first()['illust_attrs'].upload_date()
 '2019-01-23T15:00:05+00:00'
->>> res.batch().first()['illust_attrs'].regular_url()
+
+### 作品链接（这类图尺寸应该是除原图外，质量最好的）
+>>> b.first()['illust_attrs'].regular_url()
 'https://i.pximg.net/img-master/img/2019/01/24/00/00/05/72810724_p0_master1200.jpg'
->>> res.batch().first()['illust_attrs'].view_count()
+
+### 查看作品浏览数
+>>> b.first()['illust_attrs'].view_count()
 103514
->>> res.batch().first()['rank']
+
+### 查看作品排名
+>>> b.first()['rank']
 1
->>> res.batch().first()['rank_date']
+
+### 查看排名日期
+>>> b.first()['rank_date']
 '20190125'
->>> tags = res.batch().first()['illust_attrs'].tags()
+
+### 查看作品标签
+>>> tags = b.first()['illust_attrs'].tags()
 >>> tags.first()
 {'tag_info': <image.ImageTag object at 0x00000000037ACE48>, 'romaji': 'orijinaru', 'translation': {'en': 'original'}}
-...
 
+### 一种更快的获取所有标签的方法
+
+>>> for tag in b.first()['illust_attrs'].all()['tags']['tags']:
+...     print(tag['tag'])
+...
+オリジナル
+女の子
+桜
+なにこれ可愛い
+桜の花
+美少女
+ロングヘアー
+>>>
+
+```
+
+ - `one()`:
+
+```python
 >>> r = Daily(20190125)
 Crawler Initializing...
 Initialized!
 >>> g = r.one()
+
+### 用法一样很简单
 >>> g['illust_attrs'].view_count()
 108805
+
+### 
 >>> g['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
+
+### 
 >>> t = g['illust_attrs'].tags()
 >>> t.first()
 {'tag_info': <image.ImageTag object at 0x00000000037ACE48>, 'romaji': 'orijinaru', 'translation': {'en': 'original'}}
+
+###
 >>> t.first()['tag_info'].get_info()
 {'tag': 'オリジナル', 'abstract': '独自に創作したもの。', 'thumbnail': 'https://i.pximg.net/c/384x280_80_a2_g2/img-master/img/2010/01/28/15/28/49/8431682_p0_master1200.jpg'}
+
 >>> t.first()['tag_info'].get_info()['tag']
 'オリジナル'
 
