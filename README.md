@@ -220,17 +220,10 @@ b = res.batch()
 {'tag_info': <image.ImageTag object at 0x00000000037ACE48>, 'romaji': 'orijinaru', 'translation': {'en': 'original'}}
 
 ### 一种更快的获取所有标签的方法
-
 >>> for tag in b.first()['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
-オリジナル
-女の子
-桜
-なにこれ可愛い
-桜の花
-美少女
-ロングヘアー
+# output some tags
 >>>
 
 ```
@@ -264,7 +257,6 @@ Initialized!
 'オリジナル'
 
 ### 一种更快的获取所有标签的方法
-
 >>> for tag in g['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
