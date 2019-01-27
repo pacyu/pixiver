@@ -5,74 +5,52 @@ pixiver
 
 目前还有一些功能尚未完成：
 
-    使用自己账户 cookie 来完成作品收藏、点赞功能、关注喜欢的作者。
-    
-    会员相关功能。
+ * 使用个人账户 cookie 来完成作品收藏、点赞功能、关注喜欢的作者等功能
+ * 会员相关功能
+ * 命令行版
 
 特点 & 用例
 ----------
 
-可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、受男性欢迎 + R-18、受女性欢迎 + R-18排行。
+ + 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、受男性欢迎 + R-18、受女性欢迎 + R-18排行版作品。
 
-可浏览作品下的所有评论。
+ + 可浏览作品下的所有评论。
 
-可浏览作品标签、排名、点赞数、收藏数等信息。
+ + 可浏览作品标签、排名、点赞数、收藏数等信息。
 
-可根据用户 id 获取相关信息：
+ + 可根据用户 id 获取相关信息：
 
 ```python
 >>> from pixiver.user import User
 >>> r = User(6415776)
 Crawler Initializing...
 Initialized!
+
+### 查看用户昵称
 >>> r.username
 'ファルケン@'
+
+### 查看关注总量
 >>> r.following_total
 548
+
+### 是否是会员
 >>> r.premium
 True
+
+### 社交链接
 >>> r.social
 {'twitter': {'url': 'https://twitter.com/YutoZin'}}
+
+### 查看第一条关注用户信息
 >>> r.following_all.first()
-{'userId': '490219', 'userName': 'Hiten', 'profileImageUrl': 'https://i.pximg.net/user-pro
-file/img/2019/01/08/15/39/34/15232824_c72927b1f26546d25e0f5f6e20fb1764_170.png', 'userComm
-ent': "イラストレーター、台湾人。東京在住。\r\n\r\n◆お仕事履歴►http://www.hitenkei.net/pr
-ofile.html\r\n\r\n\r\n◆ご依頼、連絡はHPのプロフィールを確認の上メールにてお願いいたします
-。\u3000\r\n\u3000\r\n※お仕事を募集しておりません。\r\n※目前無法承接任何新規的委託案件\r
-\nhttp://www.hitenkei.net/profile.html\r\n\r\n\r\n►Twitter\r\nhttps://twitter.com/HitenKei
-\r\n\r\n------------------------------------------------------\r\n\r\n◆現在マイピクは募集
-しておりません。\r\n// 目前不接受加好友的請求，謝謝。 \r\n// I don't accept any MyPixiv re
-quest currently, thanks.\r\n\r\n◆＊個人使用範囲（イラストを裁断し、SNSアイコン、ヘッター
-や壁紙は問題ありません、※PC壁紙、待受は私用のみ、ネットにアップするのはご遠慮ください）以
-外\r\nイラストに対しての裁断、加工、転載は禁止です。\r\n加工、画像の使用許可メッセージには
-基本的に返事しません、\r\nまたイラストの「加工」をどうぞご遠慮ください。\r\n\r\n// 除了作
-為個人頭像、手機或電腦桌布使用以外，\r\n請不要以任何形式轉載或加工我的作品；\r\n恕不回應徵
-求轉載或加工許可的信件，謝謝。\r\n\r\n// Feel free to use my works for private use such as
- SNS icon \r\nor wallpaper, but please don't repost my works on other sites or remakes, th
-anks:)", 'following': False, 'isBlocking': False, 'illusts': [{'id': '72445878', 'title':
-'あけおめ！', 'illustType': 0, 'xRestrict': 0, 'restrict': 0, 'sl': 2, 'description': '',
-'url': 'https://i.pximg.net/c/250x250_80_a2/img-master/img/2019/01/02/02/11/34/72445878_p0
-_square1200.jpg', 'tags': ['オリジナル', '女の子', '着物', '文句無しに可愛い', 'ウリ坊', '
-オリジナル10000users入り', '視線'], 'userId': '490219', 'width': 1000, 'height': 1480, 'pa
-geCount': 1, 'isBookmarkable': True, 'bookmarkData': None}, {'id': '72300463', 'title': '
-偽装', 'illustType': 0, 'xRestrict': 0, 'restrict': 0, 'sl': 2, 'description': '', 'url':
-'https://i.pximg.net/c/250x250_80_a2/img-master/img/2018/12/26/00/00/03/72300463_p0_square
-1200.jpg', 'tags': ['オリジナル', 'C95', '水仙', '茶髪ロング', 'オリジナル10000users入り',
- '彼女の世界', 'ハイヒール'], 'userId': '490219', 'width': 1412, 'height': 1000, 'pageCoun
-t': 1, 'isBookmarkable': True, 'bookmarkData': None}, {'id': '72264526', 'title': '『聖語
-の皇弟と魔剣の騎士姫\u3000～蒼雪のクロニクル～   Ⅰ』', 'illustType': 0, 'xRestrict': 0, '
-restrict': 0, 'sl': 2, 'description': '', 'url': 'https://i.pximg.net/c/250x250_80_a2/img-
-master/img/2018/12/24/14/45/48/72264526_p0_square1200.jpg', 'tags': ['オリジナル', '仕事絵
-', '聖語の皇弟と魔剣の騎士姫', 'ラノベ', 'カロリーナ=マルヴァレフト', '氷乃華雪音', '蒼生=
-カレン=ブラッドフォード', '蒼空'], 'userId': '490219', 'width': 1000, 'height': 1403, 'pag
-eCount': 2, 'isBookmarkable': True, 'bookmarkData': None}, {'id': '72217608', 'title': 'C9
-5新刊『Re:IMPERMANENT』', 'illustType': 0, 'xRestrict': 0, 'restrict': 0, 'sl': 2, 'descri
-ption': '', 'url': 'https://i.pximg.net/c/250x250_80_a2/img-master/img/2018/12/22/00/00/56
-/72217608_p0_square1200.jpg', 'tags': ['オリジナル', 'C95', '視線', '水仙', '茶髪ロング',
-'オリジナル10000users入り'], 'userId': '490219', 'width': 851, 'height': 1200, 'pageCount'
-: 3, 'isBookmarkable': True, 'bookmarkData': None}], 'novels': []}
+{'userId': '490219', 'userName': 'Hiten', 'profileImageUrl': ...}
+
+### 
 >>> r.following_all.first()['userName']
 'Hiten'
+
+### 查看作品 id
 >>> r.illusts.first()
 '72318445'
 >>> r.illusts.next()
@@ -81,26 +59,48 @@ ption': '', 'url': 'https://i.pximg.net/c/250x250_80_a2/img-master/img/2018/12/2
 
 ```
 
-可根据图片 id 获取相关信息：
+ + 可根据图片 id 获取相关信息：
 
 ```python
 >>> from pixiver import imageiv
 >>> pi = imageiv.PixivImage(72773786)
+
+### 查看评论
 >>> comm.first()['comment']
 'face can be better'
+
+### 查看原图链接
 >>> pi.original_url()
 'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+
+### 查看喜欢作品的人数
 >>> pi.like_count()
 12183
+
+### 作者昵称
 >>> pi.user_name()
 '河CY'
+
+### 作品收藏数
 >>> pi.mark_count()
 14370
+
+### 作品评论数
 >>> pi.comment_count()
 64
+
+### 查看评论
 >>> comm = pi.view_comments()
+
+### 第一条评论
 >>> comm.first()['comment']
 'face can be better'
+
+### 第一条评论的用户昵称
+>>> comm.first()['userName']
+'...'
+
+### 下一条评论
 >>> comm.next()['comment']
 ''
 >>> comm.next()['comment']
@@ -108,9 +108,11 @@ ption': '', 'url': 'https://i.pximg.net/c/250x250_80_a2/img-master/img/2018/12/2
 >>> comm.next()['comment']
 'wsl'
 ...
+>>>
+
 ```
 
-可下载作品：
+ + 可下载作品：
 
 ```python
 >>> from pixiver import imageiv
@@ -118,19 +120,27 @@ ption': '', 'url': 'https://i.pximg.net/c/250x250_80_a2/img-master/img/2018/12/2
 Crawler Initializing...
 Initialized!
 >>> gon = r.one()
+
+### 查看作者昵称
 >>> gon['illust_attrs'].user_name()
 '河CY'
+
+### 查看排名
 >>> gon['rank']
 1
+
+### 原图链接
 >>> gon['illust_attrs'].original_url()
 'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+
+### 喜欢就保存一个
 >>> gon['illust_attrs'].save_original()
 Saved!
 >>>
 
 ```
 
-提供许多 api，可扩展到自己的项目。
+ + 提供许多 api，可扩展到自己的项目：
 
 ```python
 >>> from pixiver.imageiv import(
@@ -187,7 +197,9 @@ Initialized!
 {'tag': 'オリジナル', 'abstract': '独自に創作したもの。', 'thumbnail': 'https://i.pximg.net/c/384x280_80_a2_g2/img-master/img/2010/01/28/15/28/49/8431682_p0_master1200.jpg'}
 >>> t.first()['tag_info'].get_info()['tag']
 'オリジナル'
+
 ### 一种更快的获取所有标签的方法
+
 >>> for tag in g['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
@@ -198,15 +210,24 @@ Initialized!
 桜の花
 美少女
 ロングヘアー
+
+### 查看喜欢数
 >>> g['illust_attrs'].like_count()
 14166
+
+### 查看收藏数
 >>> g['illust_attrs'].mark_count()
 17145
+
+### 查看评论数
 >>> g['illust_attrs'].comment_count()
 64
+
+### 查看评论
+### 空字符 '' 为大表情图
+### (...) 这类是小表情
+
 >>> comments = g['illust_attrs'].view_comments()
-### 空字符为大表情图
-### ()这类是小表情
 >>> comments.first()['comment']
 ''
 >>> comments.next()['comment']
