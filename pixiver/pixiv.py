@@ -56,3 +56,6 @@ class Pixiv(object):
         self.username = username
         self.password = passwrod
         self.__login__()
+
+    def run(self):
+        pass

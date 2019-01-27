@@ -1,4 +1,3 @@
-
 class ConfigHeaders(object):
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)' \
                  ' AppleWebKit/537.36 (KHTML, like Gecko)' \
@@ -11,7 +10,8 @@ class BaseQueue(object):
     que_tar = []
 
     def __init__(self, argv=None):
-        self.que_tar = argv
+        if argv:
+            self.que_tar = argv
 
     def first(self):
         return self.que_tar[0]

@@ -1,7 +1,7 @@
 import re
 import requests
-import exceptions
-import baseiv
+from pixiver import exceptions
+from pixiver import baseiv
 from datetime import datetime
 from bs4 import BeautifulSoup
 
