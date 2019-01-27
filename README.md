@@ -20,7 +20,7 @@ pixiver
 
 可下载作品：
 
-```
+```python
 >>> from imageiv import Daily
 >>> r = Daily(20190122)
 Crawler Initializing...

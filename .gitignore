@@ -1,6 +1,7 @@
 # IDE Files
 .idea/
-#Pycharm stuff
+
+# Pycharm stuff
 .idea/*
 
 run.py
@@ -9,5 +10,5 @@ run.py
 *.jpe?g
 *.png
 
-# 
+# some cache
 __pycache__/*
