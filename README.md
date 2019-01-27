@@ -159,7 +159,7 @@ Crawler Initializing...
 Initialized!
 
 ### batch() 一次性加载 50 个对象
-b = b
+b = res.batch()
 
 ### 查看第一个图像尺寸
 
