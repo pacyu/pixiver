@@ -10,13 +10,42 @@ pixiver
     会员相关功能。
 
 特点 & 用例
-----
+----------
 
 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、受男性欢迎 + R-18、受女性欢迎 + R-18排行。
 
 可浏览作品下的所有评论。
 
 可浏览作品标签、排名、点赞数、收藏数等信息。
+
+可根据图片 id 获取相关信息：
+
+```python
+>>> from imageiv import PixivImage
+>>> pi = PixivImage(72773786)
+>>> comm.first()['comment']
+'face can be better'
+>>> pi.original_url()
+'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+>>> pi.like_count()
+12183
+>>> pi.user_name()
+'河CY'
+>>> pi.mark_count()
+14370
+>>> pi.comment_count()
+64
+>>> comm = pi.view_comments()
+>>> comm.first()['comment']
+'face can be better'
+>>> comm.next()['comment']
+''
+>>> comm.next()['comment']
+'(heart)'
+>>> comm.next()['comment']
+'wsl'
+...
+```
 
 可下载作品：
 
