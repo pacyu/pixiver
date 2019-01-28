@@ -50,6 +50,7 @@ class PixivImage(baseiv.ConfigHeaders):
     user_comments = None
     im_data = None
     im_name = None
+    orig_im = None
 
     def __init__(self, illust_id):
         self.url = 'https://www.pixiv.net/ajax/illust/' \
@@ -174,7 +175,7 @@ class PixivImage(baseiv.ConfigHeaders):
         im = Image.open(BytesIO(self.im_data))
         im.show()
 
-    def save_original(self):
+    def save(self):
         if not self.im_data:
             illust_url = self.original_url()
             self.im_name = illust_url.split('/')[-1]
@@ -189,6 +190,24 @@ class PixivImage(baseiv.ConfigHeaders):
 
         with open(self.im_name, 'wb') as f:
             f.write(self.im_data)
+        print('Saved!')
+
+    def save_original(self):
+        if not self.orig_im:
+            illust_url = self.original_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(self.original_url(), headers=self.headers,
+                              timeout=2)
+            self.orig_im = rg.content
+            self.im_data = self.orig_im
+
+        with open(self.im_name, 'wb') as f:
+            f.write(self.orig_im)
         print('Saved!')
 
 

@@ -112,6 +112,24 @@ True
 >>>
 
 ```
+ + 可查看作品（不需要登录）：
+```
+>>> from pixiver.imageiv import PixivImage
+>>> r = PixivImage(72826365)
+
+### 查看 mini 图
+>>> r.view_mini_image()
+...
+
+### 查看 regular 图
+>>> r.view_regu_image()
+...
+
+### 查看原图
+>>> r.view_orig_image()
+...
+
+```
 
  + 可下载作品（不需要登录）：
 
@@ -135,6 +153,12 @@ Initialized!
 'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
 
 ### 喜欢就保存一个
+# 默认保存原图，否则保存前一个查看图片命令下的图像类型
+# 如：gon['illust_attrs'].view_regul_image()
+>>> gon['illust_attrs'].save()
+Saved!
+
+### 一种直接保存原图的方式
 >>> gon['illust_attrs'].save_original()
 Saved!
 >>>
