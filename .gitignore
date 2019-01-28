@@ -1,0 +1,16 @@
+# IDE Files
+.idea/
+
+# Pycharm stuff
+.idea/*
+
+run.py
+
+# images
+*.jpe?g
+*.png
+
+# some cache
+__pycache__/
+
+setup.py
