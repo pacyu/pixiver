@@ -1,5 +1,7 @@
 import re
 import requests
+from PIL import Image
+from io import BytesIO
 from bs4 import BeautifulSoup
 from pixiver import exceptions
 from pixiver import baseiv
@@ -46,6 +48,8 @@ class ImageComment(baseiv.BaseQueue, baseiv.ConfigHeaders):
 class PixivImage(baseiv.ConfigHeaders):
     base_tags_que = None
     user_comments = None
+    im_data = None
+    im_name = None
 
     def __init__(self, illust_id):
         self.url = 'https://www.pixiv.net/ajax/illust/' \
@@ -122,18 +126,69 @@ class PixivImage(baseiv.ConfigHeaders):
             )
         return self.user_comments
 
-    def save_original(self):
-        illust_url = self.original_url()
-        illust_name = illust_url.split('/')[-1]
-        self.headers = {
-            'Referer': 'https://www.pixiv.net/member_illust.php?'
-                       'mode=medium&illust_id=' + self.illust_id(),
-            'User-Agent': self.user_agent
-        }
-        with open(illust_name, 'wb') as f:
+    def view_mini_image(self):
+        if not self.im_data:
+            illust_url = self.mini_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
             rg = requests.get(illust_url, headers=self.headers,
                               timeout=2)
-            f.write(rg.content)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def view_regul_image(self):
+        if not self.im_data:
+            illust_url = self.regular_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(illust_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def view_orig_image(self):
+        if not self.im_data:
+            illust_url = self.original_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(illust_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def save_original(self):
+        if not self.im_data:
+            illust_url = self.original_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(self.original_url(), headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        with open(self.im_name, 'wb') as f:
+            f.write(self.im_data)
         print('Saved!')
 
 
