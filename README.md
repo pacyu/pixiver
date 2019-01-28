@@ -1,17 +1,12 @@
 pixiver
 =======
 
-这是一个面向 `pixiv` 的网络爬虫，您也可以将其作为当命令行版浏览器使用。
-
-目前还有一些功能尚未完成：
-
- * 使用个人账户 cookie 来完成作品收藏、点赞、关注喜欢的作者、发表评论等功能
- * 会员相关功能
- * 命令行版
+这是一个面向 `pixiv` 的 `python` 库。
 
 特点 & 用例
 ----------
-note: 删除线表示 pixiv 没有提供这类服务或 api。
+
+注意: 删除线表示 pixiv 没有提供这类服务或 api。
 
  + 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、每日 + R-18、每周 + R-18、~~每月 + R-18~~、~~新人 + R-18~~、~~原创 + R-18~~、受男性欢迎 + R-18、受女性欢迎 + R-18排行版作品（不需要登录）。
 
@@ -56,7 +51,7 @@ True
 '72318445'
 >>> r.illusts.next()
 '72147871'
->>> 
+...
 
 ```
 
@@ -109,7 +104,6 @@ True
 >>> comm.next()['comment']
 'wsl'
 ...
->>>
 
 ```
  + 可查看作品（不需要登录）：
@@ -161,7 +155,6 @@ Saved!
 ### 一种直接保存原图的方式
 >>> gon['illust_attrs'].save_original()
 Saved!
->>>
 
 ```
 
@@ -249,7 +242,6 @@ b = res.batch()
 ...     print(tag['tag'])
 ...
 # output some tags
->>>
 
 ```
 
@@ -314,31 +306,12 @@ Initialized!
 ''
 >>> comments.next()['comment']
 '観に行く！'
->>> comments.next()['comment']
-'好看(sweat4)(sweat4)'
->>> comments.next()['comment']
-'自分が外国人なのが一番残念ですね。\n日本までテレポートできればいいのに( ´•ω•` )'
->>> comments.next()['comment']
-'Ooooooooh mah G A D'
->>> comments.next()['comment']
-'素晴らしい'
->>> comments.next()['comment']
-'可真棒'
->>> comments.next()['comment']
-''
->>> comments.next()['comment']
-'長い髪が舞うかわいい女の子'
->>> comments.next()['comment']
-'好看好看'
->>> comments.next()['comment']
-'感觉不错\n'
->>> comments.next()['comment']
-''
->>> comments.next()['comment']
-'好惊艳啊。。。'
->>> comments.next()['comment']
-'벚꽃에 둘러싸여 찰랑이는 긴머리를 흩날리며 웃는 갈색머리의 아가씨 정말 예쁘군요♡♡'
->>>
+...
 
 ```
 
+暂时不支持以下功能：
+
+ * 使用个人账户 cookie 来完成作品收藏、点赞、关注喜欢的作者、发表评论等功能
+ * 会员相关功能
+ * 命令行版
