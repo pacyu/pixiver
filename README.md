@@ -113,7 +113,7 @@ True
 
 ```
  + 可查看作品（不需要登录）：
-```
+```python
 >>> from pixiver.imageiv import PixivImage
 >>> r = PixivImage(72826365)
 
@@ -122,7 +122,7 @@ True
 ...
 
 ### 查看 regular 图
->>> r.view_regu_image()
+>>> r.view_regul_image()
 ...
 
 ### 查看原图
