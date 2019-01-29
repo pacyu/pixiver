@@ -28,16 +28,18 @@ class ImageTag(baseiv.ConfigHeaders):
                 self.info_json['message']
             )
 
-        if 'tag' in self.info_json['body']:
+        if self.info_json['body']:
             self.im_tag_url = self.info_json['body']['thumbnail']
             self.im_name = self.im_tag_url.split('/')[-1]
             self.illust_id = self.im_name.split('.')[0]\
                 .replace('_p0_master1200', '')\
                 .replace('_p0', '')
         else:
-            self.info_json['body']['tag'] = unquote_plus(tag)
-            self.info_json['body']['abstract'] = None
-            self.info_json['body']['thumbnail'] = None
+            self.info_json['body'] = {
+                'tag': unquote_plus(tag),
+                'abstract': None,
+                'thumbnail': None
+            }
 
     def tag_info(self):
         return self.info_json['body']
