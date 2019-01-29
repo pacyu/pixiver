@@ -307,12 +307,14 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
     rank_total = 0
     subscript = 0
     params = {
+        'date': '',
+        'p': '',
         'format': 'json'
     }
     current_page = 1
+    current_date = None
 
     def __init__(self, daily=None):
-
         if daily:
             reg = re.compile(
                 r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
@@ -329,10 +331,10 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
 
             check_date(year, mouth, day)
 
-            self.params = {
+            self.params.update({
                 'date': date,
-                'format': 'json',
-            }
+                'p': self.current_page
+            })
             self.current_date = date
             self.__run__(params=self.params)
 
@@ -346,43 +348,27 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
                 len(self.curr_batch), self.rank_total,
                 params['date'], params['p']
             )
+
         headers = {'User-Agent': self.user_agent}
         r = requests.get(self.init_url, params=params,
                          headers=headers, timeout=5)
+
         self.daily_json = r.json()
+
         if self.rank_total == 0:
             self.rank_total = self.daily_json['rank_total']
         self.current_page = self.daily_json['page']
         self.current_date = self.daily_json['date']
+
         print(self.init_finished)
         self.init_finished = 'Load finished!'
 
     def run(self, daily=None):
         if daily:
-            reg = re.compile(
-                r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
-            )
-            s = reg.fullmatch(str(daily))
-            date = s.string
-            date = date.replace('/', '')\
-                .replace('-', '')\
-                .replace('.', '')
-
-            year = int(date[:4])
-            mouth = int(date[4:6])
-            day = int(date[6:])
-
-            check_date(year, mouth, day)
-
-            self.params = {
-                'date': date,
-                'format': 'json',
-            }
-
-            self.current_date = date
-
-        self.__run__(self.params)
-        return self
+            self.__init__(daily)
+        else:
+            self.__run__(self.params)
+            return self
 
     def one(self):
         self.curr_one = {
@@ -433,17 +419,12 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
         else:
             print('last!')
 
-    def curr_date(self):
-        return self.daily_json['date']
-
     def prev_date(self):
         if self.daily_json['prev_date']:
             self.rank_total = 0
             self.curr_batch.clear()
             self.params = {
-                'date': self.daily_json['prev_date'],
-                'p': self.daily_json['page'],
-                'format': 'json',
+                'date': self.daily_json['prev_date']
             }
             return self.run()
 
@@ -451,32 +432,23 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
         if self.daily_json['next_date']:
             self.rank_total = 0
             self.curr_batch.clear()
-            self.params = {
-                'date': self.daily_json['next_date'],
-                'p': self.daily_json['page'],
-                'format': 'json',
-            }
+            self.params.update({
+                'date': self.daily_json['next_date']
+            })
             return self.run()
-
-    def curr_page(self):
-        return self.daily_json['page']
 
     def prev_page(self):
         if self.daily_json['prev']:
-            self.params = {
-                'date': self.daily_json['date'],
-                'p': self.daily_json['prev'],
-                'format': 'json',
-            }
+            self.params.update({
+                'p': self.daily_json['prev']
+            })
             return self.run()
 
     def next_page(self):
         if self.daily_json['next']:
-            self.params = {
-                'date': self.daily_json['date'],
-                'p': self.daily_json['next'],
-                'format': 'json',
-            }
+            self.params.update({
+                'p': self.daily_json['next']
+            })
             return self.run()
 
     def get_token(self):
