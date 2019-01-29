@@ -295,50 +295,40 @@ True
 >>> from pixiver import imageiv
 >>> pi = imageiv.PixivImage(72773786)
 
-### 查看评论
->>> comm.first()['comment']
+# 查看评论
+>>> coms = pi.view_comments()
+
+# 第一条评论
+>>> coms.first()['comment']
 'face can be better'
 
-### 查看原图链接
->>> pi.original_url()
-'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
-
-### 查看喜欢作品的人数
->>> pi.like_count()
-12183
-
-### 作者昵称
->>> pi.user_name()
-'河CY'
-
-### 作品收藏数
->>> pi.mark_count()
-14370
-
-### 作品评论数
->>> pi.comment_count()
-64
-
-### 查看评论
->>> comm = pi.view_comments()
-
-### 第一条评论
->>> comm.first()['comment']
-'face can be better'
-
-### 第一条评论的用户昵称
->>> comm.first()['userName']
+# 用户昵称
+>>> coms.first()['userName']
 '...'
 
 # 下一条评论
->>> comm.next()['comment']
-''
->>> comm.next()['comment']
-'(heart)'
->>> comm.next()['comment']
-'wsl'
+>>> coms.next()['comment']
 ...
 
+# 查看原图链接
+>>> pi.original_url()
+'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+
+# 查看喜欢作品的人数
+>>> pi.like_count()
+12183
+
+# 作者昵称
+>>> pi.user_name()
+'河CY'
+
+# 作品收藏数
+>>> pi.mark_count()
+14370
+
+# 作品评论数
+>>> pi.comment_count()
+64
 ```
 
 4. 其他：
@@ -348,11 +338,11 @@ True
 ```
 >>> from pixiver.imageiv import PixivImage
 >>> r = PixivImage(imageid)
->>> r.tags().first()['tag_info'].save()
+>>> r.view_tags().first().save_tag_image()
 ...
 ```
 
-可查看作品的尺寸
+作品的几种尺寸
 
 ```
 >>> from pixiver.imageiv import PixivImage
