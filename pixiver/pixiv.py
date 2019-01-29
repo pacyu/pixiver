@@ -1,5 +1,6 @@
 from requests import Session
 from bs4 import BeautifulSoup
+from pixiver.exceptions import PixivError
 
 
 class Pixiv(object):
@@ -42,15 +43,13 @@ class Pixiv(object):
         self.sess.headers.update(login.headers)
         log_msg = login.json()
 
-        if not log_msg['error']:
-            if 'validation_errors' not in log_msg['body']:
-                print('login success')
-            else:
-                print(log_msg['body']['validation_errors']['pixiv_id'])
-                exit(1)
+        if log_msg['error']:
+            raise PixivError(log_msg['message'])
+        
+        if 'validation_errors' not in log_msg['body']:
+            print('login success')
         else:
-            print(log_msg['message'])
-            exit(1)
+            raise PixivError(log_msg['body']['validation_errors']['pixiv_id'])
 
     def login(self, username, passwrod):
         self.username = username

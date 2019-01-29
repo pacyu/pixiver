@@ -26,10 +26,11 @@ class ImageTag(baseiv.ConfigHeaders):
             .replace('_p0', '')
 
     def get_info(self):
-        if not self.info_json['error']:
-            return self.info_json['body']
-        else:
-            raise exceptions.AjaxRequestError('Unknown error...')
+        if self.info_json['error']:
+            raise exceptions.AjaxRequestError(
+                self.info_json['message']
+            )
+        return self.info_json['body']
 
     def view_thumbnail_image(self):
         if not self.im_data:
@@ -76,9 +77,12 @@ class ImageComment(baseiv.BaseQueue, baseiv.ConfigHeaders):
         self.info_json = r.json()
 
     def get_info(self):
-        if not self.info_json['error']:
-            self.que_tar = self.info_json['body']['comments']
-            return self.que_tar
+        if self.info_json['error']:
+            raise exceptions.AjaxRequestError(
+                self.info_json['message']
+            )
+        self.que_tar = self.info_json['body']['comments']
+        return self.que_tar
 
 
 class PixivImage(baseiv.ConfigHeaders):
@@ -98,7 +102,9 @@ class PixivImage(baseiv.ConfigHeaders):
                          timeout=5)
         info = r.json()
         if info['error']:
-            raise exceptions.AjaxRequestError('Unknown error...')
+            raise exceptions.AjaxRequestError(
+                self.info['message']
+            )
 
         self.info = info['body']
 

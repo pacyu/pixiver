@@ -1,4 +1,5 @@
 from pixiver import pixiv, baseiv, imageiv
+from pixiver.exceptions import AjaxRequestError
 
 
 class User(pixiv.Pixiv, baseiv.PixivInitSay):
@@ -27,25 +28,33 @@ class User(pixiv.Pixiv, baseiv.PixivInitSay):
             )
             self.person_json.update(person_req.json())
 
-            if not self.person_json['error']:
-                self.username = self.person_json['body']['name']
-                self.following_total = self.person_json['body']['following']
-                self.social = self.person_json['body']['social']
-                self.premium = self.person_json['body']['premium']
+            if self.person_json['error']:
+                raise AjaxRequestError(
+                    self.person_json['message']
+                )
+
+            self.username = self.person_json['body']['name']
+            self.following_total = self.person_json['body']['following']
+            self.social = self.person_json['body']['social']
+            self.premium = self.person_json['body']['premium']
 
             profile_request = self.sess.get(
                 profile, headers=self.sess.headers, timeout=5
             )
             self.profile_json.update(profile_request.json())
 
-            if not self.profile_json['error']:
-                self.illusts = baseiv.BaseQueue(list(
-                    self.profile_json['body']['illusts'].keys()
+            if self.profile_json['error']:
+                raise AjaxRequestError(
+                    self.profile_json['message']
+                )
+
+            self.illusts = baseiv.BaseQueue(list(
+                self.profile_json['body']['illusts'].keys()
+            ))
+            if 'manga' in self.profile_json['body']:
+                self.mangas = baseiv.BaseQueue(list(
+                    self.profile_json['body']['manga'].keys()
                 ))
-                if 'manga' in self.profile_json['body']:
-                    self.mangas = baseiv.BaseQueue(list(
-                        self.profile_json['body']['manga'].keys()
-                    ))
 
             self.sess.headers['Referer'] = \
                 'https://www.pixiv.net/bookmark.php?' \
@@ -61,6 +70,12 @@ class User(pixiv.Pixiv, baseiv.PixivInitSay):
                     following, headers=self.sess.headers, timeout=5
                 )
                 follow_json = follow_request.json()
+
+                if follow_json['error']:
+                    raise AjaxRequestError(
+                        follow_json['message']
+                    )
+
                 for users_iter in follow_json['body']['users']:
                     self.following_all.que_tar.append(users_iter)
                 offset += 20
