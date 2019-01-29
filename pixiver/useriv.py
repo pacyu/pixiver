@@ -1,4 +1,4 @@
-from pixiver import pixiv, baseiv, imageiv
+from pixiver import pixiv, baseiv
 from pixiver.exceptions import AjaxRequestError
 
 

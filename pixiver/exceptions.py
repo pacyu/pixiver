@@ -6,5 +6,5 @@ class DateError(PixivError):
     """ Date range exception. """
 
 
-class AjaxRequestError(Exception):
+class AjaxRequestError(PixivError):
     """ Some unexpected errors may occur. """
