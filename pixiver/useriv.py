@@ -1,7 +1,7 @@
 from pixiver import pixiv, baseiv, imageiv
 
 
-class User(pixiv.Pixiv, imageiv.PixivInit):
+class User(pixiv.Pixiv, baseiv.PixivInitSay):
     person_json = {}
     profile_json = {}
     following_all = baseiv.BaseQueue()
@@ -10,7 +10,7 @@ class User(pixiv.Pixiv, imageiv.PixivInit):
         super().__init__(username=username, password=password)
 
         if user_id:
-            print(self.init_say)
+            print(self.init_run)
             self.user_id = user_id
 
             person = 'https://www.pixiv.net/ajax/user/%s?' \

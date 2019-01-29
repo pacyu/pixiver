@@ -5,6 +5,11 @@ class ConfigHeaders(object):
     referer = ''
 
 
+class PixivInitSay:
+    init_run = 'Crawler Initializing...'
+    init_finished = 'Initialized!'
+
+
 class BaseQueue(object):
     step_number = 0
     que_tar = []

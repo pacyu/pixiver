@@ -13,16 +13,52 @@ class ImageTag(baseiv.ConfigHeaders):
     def __init__(self, tag):
         self.url = 'https://www.pixiv.net/ajax/tag/' \
                    '%s/info' % tag
+        self.im_data = None
+
         self.headers = {'User-Agent': self.user_agent}
         r = requests.get(self.url, headers=self.headers,
                          timeout=5)
         self.info_json = r.json()
+        self.im_tag_url = self.info_json['body']['thumbnail']
+        self.im_name = self.im_tag_url.split('/')[-1]
+        self.illust_id = self.im_name.split('.')[0]\
+            .replace('_p0_master1200', '')\
+            .replace('_p0', '')
 
     def get_info(self):
         if not self.info_json['error']:
             return self.info_json['body']
         else:
             raise exceptions.AjaxRequestError('Unknown error...')
+
+    def view_thumbnail_image(self):
+        if not self.im_data:
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id,
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(self.im_tag_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def save_tag_image(self):
+        if not self.im_data:
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id,
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(self.im_tag_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        with open(self.im_name, 'wb') as f:
+            f.write(self.im_data)
+        print('Saved!')
 
 
 class ImageComment(baseiv.BaseQueue, baseiv.ConfigHeaders):
@@ -99,13 +135,17 @@ class PixivImage(baseiv.ConfigHeaders):
         if self.base_tags_que is None:
             self.base_tags_que = baseiv.BaseQueue([{
                 'tag_info': ImageTag(tag['tag']),
-                'romaji': tag['romaji'],
-                'translation': tag['translation']
             } for tag in tags_que])
         return self.base_tags_que
 
     def mini_url(self):
         return self.info['urls']['mini']
+
+    def thumb_url(self):
+        return self.info['urls']['thumb']
+
+    def small_url(self):
+        return self.info['urls']['small']
 
     def original_url(self):
         return self.info['urls']['original']
@@ -130,6 +170,38 @@ class PixivImage(baseiv.ConfigHeaders):
     def view_mini_image(self):
         if not self.im_data:
             illust_url = self.mini_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(illust_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def view_thumb_image(self):
+        if not self.im_data:
+            illust_url = self.thumb_url()
+            self.im_name = illust_url.split('/')[-1]
+            self.headers = {
+                'Referer': 'https://www.pixiv.net/member_illust.php?'
+                           'mode=medium&illust_id=' + self.illust_id(),
+                'User-Agent': self.user_agent
+            }
+            rg = requests.get(illust_url, headers=self.headers,
+                              timeout=2)
+            self.im_data = rg.content
+
+        im = Image.open(BytesIO(self.im_data))
+        im.show()
+
+    def view_small_image(self):
+        if not self.im_data:
+            illust_url = self.small_url()
             self.im_name = illust_url.split('/')[-1]
             self.headers = {
                 'Referer': 'https://www.pixiv.net/member_illust.php?'
@@ -177,20 +249,11 @@ class PixivImage(baseiv.ConfigHeaders):
 
     def save(self):
         if not self.im_data:
-            illust_url = self.original_url()
-            self.im_name = illust_url.split('/')[-1]
-            self.headers = {
-                'Referer': 'https://www.pixiv.net/member_illust.php?'
-                           'mode=medium&illust_id=' + self.illust_id(),
-                'User-Agent': self.user_agent
-            }
-            rg = requests.get(self.original_url(), headers=self.headers,
-                              timeout=2)
-            self.im_data = rg.content
-
-        with open(self.im_name, 'wb') as f:
-            f.write(self.im_data)
-        print('Saved!')
+            self.save_original()
+        else:
+            with open(self.im_name, 'wb') as f:
+                f.write(self.im_data)
+            print('Saved!')
 
     def save_original(self):
         if not self.orig_im:
@@ -224,12 +287,7 @@ class DailyImages(baseiv.BaseQueue):
         ]
 
 
-class PixivInit:
-    init_say = 'Crawler Initializing...'
-    init_finished = 'Initialized!'
-
-
-class Daily(baseiv.ConfigHeaders, PixivInit):
+class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
     init_url = 'https://www.pixiv.net/ranking.php?' \
                'mode=daily'
     curr_one = {}
@@ -243,17 +301,15 @@ class Daily(baseiv.ConfigHeaders, PixivInit):
 
     def __init__(self, daily=None):
 
-        self.headers = {'User-Agent': self.user_agent}
-
         if daily:
             reg = re.compile(
                 r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
             )
             s = reg.fullmatch(str(daily))
             date = s.string
-            date = date.replace('/', ''). \
-                replace('-', ''). \
-                replace('.', '')
+            date = date.replace('/', '')\
+                .replace('-', '')\
+                .replace('.', '')
 
             year = int(date[:4])
             mouth = int(date[4:6])
@@ -269,14 +325,18 @@ class Daily(baseiv.ConfigHeaders, PixivInit):
             self.__run__(params=self.params)
 
     def __run__(self, params):
-        print(self.init_say)
-        self.init_say = 'Loading...\n' \
-                        'Current date: {}, page: {},' \
-                        ' batch_size: {}, rank total: {}'.\
-            format(self.current_date, self.current_page,
-                   len(self.curr_batch), self.rank_total)
+        print(self.init_run)
+        self.init_run = 'Current date: {}, page: {},' \
+                        ' batch_size: {}, rank total: {}\n' \
+                        'Loading date: {}, page: {} ...' \
+            .format(
+                self.current_date, self.current_page,
+                len(self.curr_batch), self.rank_total,
+                params['date'], params['p']
+            )
+        headers = {'User-Agent': self.user_agent}
         r = requests.get(self.init_url, params=params,
-                         headers=self.headers, timeout=5)
+                         headers=headers, timeout=5)
         self.daily_json = r.json()
         if self.rank_total == 0:
             self.rank_total = self.daily_json['rank_total']
@@ -292,9 +352,9 @@ class Daily(baseiv.ConfigHeaders, PixivInit):
             )
             s = reg.fullmatch(str(daily))
             date = s.string
-            date = date.replace('/', ''). \
-                replace('-', ''). \
-                replace('.', '')
+            date = date.replace('/', '')\
+                .replace('-', '')\
+                .replace('.', '')
 
             year = int(date[:4])
             mouth = int(date[4:6])
@@ -331,10 +391,10 @@ class Daily(baseiv.ConfigHeaders, PixivInit):
             list3.append(take['rank'])
 
         curr_batch = DailyImages(
-                illust_attr=list1,
-                rank_date=list2,
-                rank=list3
-            )
+            illust_attr=list1,
+            rank_date=list2,
+            rank=list3
+        )
         self.curr_batch = curr_batch.que_tar
         return curr_batch
 
@@ -409,12 +469,12 @@ class Daily(baseiv.ConfigHeaders, PixivInit):
 
     def get_token(self):
         url = 'https://www.pixiv.net/ranking.php?mode=daily'
-        self.headers = {
+        headers = {
             'Referer': 'https://www.pixiv.net/ranking.php?'
                        'mode=daily',
             'User-Agent': self.user_agent
         }
-        r = requests.get(url, headers=self.headers, timeout=5)
+        r = requests.get(url, headers=headers, timeout=5)
         doc = r.text
         soup = BeautifulSoup(doc, 'html.parser')
         script = soup.find_all('script')
