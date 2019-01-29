@@ -45,7 +45,7 @@ class Pixiv(object):
 
         if log_msg['error']:
             raise PixivError(log_msg['message'])
-        
+
         if 'validation_errors' not in log_msg['body']:
             print('login success')
         else:
