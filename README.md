@@ -129,20 +129,19 @@ bat = r.batch()
 
 # 查看评论
 >>> vcbf = bf['illust_attrs'].view_comment()
->>> itvcbf = vcbf.get_info()
->>> itvcbf.first()['comment']
+>>> vcbf.first()['comment']
 ...
->>> itvcbf.first()['userName']
+>>> vcbf.first()['userName']
 ...
->>> itvcbf.next()['comment']
+>>> vcbf.next()['comment']
 ...
 
 # 查看作品标签信息
->>> tags = bf['illust_attrs'].tags()
+>>> tags = bf['illust_attrs'].view_tags()
 >>> tf = tags.first()
 >>> tf
-{'tag_info': <image.ImageTag object..., 'romaji': 'orijinaru', 'translation': {'en': 'original'}}
->>> tf['tag_info'].get_info()['tag']
+<image.ImageTag object 0x00..>
+>>> tf.view_tag()
 # tag
 ...
 
@@ -192,11 +191,11 @@ Initialized!
 >>> ro['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
 
->>> t = ro['illust_attrs'].tags()
+>>> t = ro['illust_attrs'].view_tags()
 >>> tf = t.first()
->>> tf['tag_info'].get_info()
+>>> tf.tag_info()
 {'tag': 'オリジナル', 'abstract': '独自に創作したもの。', 'thumbnail': 'https://i.pximg.net/....jpg'}
->>> tf['tag_info'].get_info()['tag']
+>>> tf.view_tag()
 'オリジナル'
 >>> for tag in ro['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
@@ -223,10 +222,9 @@ Initialized!
 
 # 查看评论
 >>> vcro = ro['illust_attrs'].view_comments()
->>> itvcro = vcro.get_info()
->>> itvcro.first()['comment']
+>>> vcro.first()['comment']
 ...
->>> itvcro.next()['comment']
+>>> vcro.next()['comment']
 ...
 ```
 

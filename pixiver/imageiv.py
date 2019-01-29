@@ -19,18 +19,26 @@ class ImageTag(baseiv.ConfigHeaders):
         r = requests.get(self.url, headers=self.headers,
                          timeout=5)
         self.info_json = r.json()
+
+        if self.info_json['error']:
+            raise exceptions.AjaxRequestError(
+                self.info_json['message']
+            )
+
         self.im_tag_url = self.info_json['body']['thumbnail']
         self.im_name = self.im_tag_url.split('/')[-1]
         self.illust_id = self.im_name.split('.')[0]\
             .replace('_p0_master1200', '')\
             .replace('_p0', '')
 
-    def get_info(self):
-        if self.info_json['error']:
-            raise exceptions.AjaxRequestError(
-                self.info_json['message']
-            )
+    def tag_info(self):
         return self.info_json['body']
+
+    def view_tag(self):
+        return self.info_json['body']['tag']
+    
+    def view_abstract(self):
+        return self.info_json['body']['abstract']
 
     def view_thumbnail_image(self):
         if not self.im_data:
@@ -62,7 +70,7 @@ class ImageTag(baseiv.ConfigHeaders):
         print('Saved!')
 
 
-class ImageComment(baseiv.BaseQueue, baseiv.ConfigHeaders):
+class ImageDiscuss(baseiv.BaseQueue, baseiv.ConfigHeaders):
 
     def __init__(self, illust_id, comments_count):
         super().__init__()
@@ -76,13 +84,12 @@ class ImageComment(baseiv.BaseQueue, baseiv.ConfigHeaders):
                          timeout=5)
         self.info_json = r.json()
 
-    def get_info(self):
         if self.info_json['error']:
             raise exceptions.AjaxRequestError(
                 self.info_json['message']
             )
+
         self.que_tar = self.info_json['body']['comments']
-        return self.que_tar
 
 
 class PixivImage(baseiv.ConfigHeaders):
@@ -136,12 +143,11 @@ class PixivImage(baseiv.ConfigHeaders):
     def like_count(self):
         return self.info['likeCount']
 
-    def tags(self):
-        tags_que = self.info['tags']['tags']
+    def view_tags(self):
         if self.base_tags_que is None:
-            self.base_tags_que = baseiv.BaseQueue([{
-                'tag_info': ImageTag(tag['tag']),
-            } for tag in tags_que])
+            tags_que = self.info['tags']['tags']
+            self.base_tags_que = baseiv.BaseQueue([
+                ImageTag(tag['tag']) for tag in tags_que])
         return self.base_tags_que
 
     def mini_url(self):
@@ -167,7 +173,7 @@ class PixivImage(baseiv.ConfigHeaders):
 
     def view_comments(self):
         if not self.user_comments:
-            self.user_comments = ImageComment(
+            self.user_comments = ImageDiscuss(
                 self.illust_id(),
                 self.comment_count()
             )
