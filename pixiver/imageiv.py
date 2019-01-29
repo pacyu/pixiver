@@ -1,5 +1,6 @@
 import re
 import requests
+from requests.compat import quote_plus
 from PIL import Image
 from io import BytesIO
 from bs4 import BeautifulSoup
@@ -147,7 +148,7 @@ class PixivImage(baseiv.ConfigHeaders):
         if self.base_tags_que is None:
             tags_que = self.info['tags']['tags']
             self.base_tags_que = baseiv.BaseQueue([
-                ImageTag(tag['tag']) for tag in tags_que])
+                ImageTag(quote_plus(tag['tag'])) for tag in tags_que])
         return self.base_tags_que
 
     def mini_url(self):
