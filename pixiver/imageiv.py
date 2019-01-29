@@ -98,6 +98,8 @@ class ImageDiscuss(baseiv.BaseQueue, baseiv.ConfigHeaders):
             raise exceptions.AjaxRequestError(
                 self.info_json['message']
             )
+        elif not self.info_json['body']:
+            self.info_json['body'] = {'comments': None}
 
         self.que_tar = self.info_json['body']['comments']
 
