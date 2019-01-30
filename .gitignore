@@ -13,4 +13,8 @@ run.py
 # some cache
 __pycache__/
 
-setup.py
+*.egg-info/
+
+build/
+
+dist/
