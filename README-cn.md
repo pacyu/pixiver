@@ -1,7 +1,12 @@
 pixiver
 =======
 
-这是一个面向 `pixiv` 的 `python` 库。
+这是一个面向 `pixiv` 的 python 库。
+
+安装
+----
+
+`pip install pixiver`
 
 入门指南
 -------
