@@ -40,3 +40,6 @@ class BaseQueue(object):
 
     def last(self):
         return self.que_tar[len(self.que_tar) - 1]
+
+    def size(self):
+        return len(self.que_tar)

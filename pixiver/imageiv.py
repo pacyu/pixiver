@@ -180,6 +180,9 @@ class PixivImage(baseiv.ConfigHeaders):
     def user_name(self):
         return self.info['userName']
 
+    def user_id(self):
+        return self.info['userId']
+
     def view_count(self):
         return self.info['viewCount']
 
@@ -300,24 +303,27 @@ class PixivImage(baseiv.ConfigHeaders):
 
 class DailyImages(baseiv.BaseQueue):
 
-    def __init__(self, illust_attr, rank_date, rank):
+    def __init__(self, **kwargs):
         super().__init__()
         self.que_tar = [
             {
                 'illust_attrs': zip_[0],
                 'rank_date': zip_[1],
-                'rank': zip_[2]
-            } for zip_ in zip(illust_attr, rank_date, rank)
+                'rank': zip_[2],
+                'yes_rank': zip_[3]
+            } for zip_ in zip(
+                kwargs['illust_attr'],
+                kwargs['rank_date'],
+                kwargs['rank'],
+                kwargs['yes_rank']
+            )
         ]
 
 
-class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
+class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay, baseiv.BaseQueue):
     init_url = 'https://www.pixiv.net/ranking.php?' \
                'mode=daily'
-    curr_one = {}
-    curr_batch = []
     rank_total = 0
-    subscript = 0
     one_count = 0
     params = {
         'date': '',
@@ -328,6 +334,7 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
     current_date = None
 
     def __init__(self, daily=None):
+        super().__init__()
         if daily:
             reg = re.compile(
                 r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
@@ -353,14 +360,6 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
 
     def __run__(self, params):
         print(self.init_run)
-        self.init_run = 'Current date: {}, page: {},' \
-                        ' batch_size: {}, rank total: {}\n' \
-                        'Loading date: {}, page: {} ...' \
-            .format(
-                self.current_date, self.current_page,
-                len(self.curr_batch), self.rank_total,
-                params['date'], params['p']
-            )
 
         headers = {'User-Agent': self.user_agent}
         r = requests.get(self.init_url, params=params,
@@ -374,6 +373,13 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
         self.current_date = self.daily_json['date']
 
         print(self.init_finished)
+
+        self.init_run = 'Current batch_size: {}, rank total: {}\n' \
+                        'Loading date: {}, page: {} ...' \
+            .format(
+                len(self.que_tar), self.rank_total,
+                params['date'], params['p']
+            )
         self.init_finished = 'Load finished!'
 
     def run(self, daily=None):
@@ -384,65 +390,53 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
         return self
 
     def one(self):
-        self.one_count += 1
-        self.subscript = self.one_count
-        self.curr_one = {
-            'illust_attrs': PixivImage(
-                self.daily_json['contents'][self.one_count]['illust_id']
-            ),
-            'rank_date': self.daily_json['date'],
-            'rank': self.daily_json['contents'][self.one_count]['rank']
-        }
-        self.curr_batch.append(self.curr_one)
-        return self.curr_one
+        if self.one_count < 50:
+            curr_one = {
+                'illust_attrs': PixivImage(
+                    self.daily_json['contents'][self.one_count]['illust_id']
+                ),
+                'rank_date': self.daily_json['date'],
+                'rank': self.daily_json['contents'][self.one_count]['rank'],
+                'yes_rank': self.daily_json['contents'][self.one_count]['yes_rank']
+            }
+            self.one_count += 1
+            self.que_tar.append(curr_one)
+            return self.last()
+        else:
+            return self.next_page().one()
 
     def batch(self):
-        list1, list2, list3 = [], [], []
-        while self.one_count < 50:
 
-            take = self.daily_json['contents'][self.one_count]
+        if self.one_count < 50:
+            list1, list2, list3, list4 = [], [], [], []
+            while self.one_count < 50:
 
-            list1.append(PixivImage(take['illust_id']))
-            list2.append(self.daily_json['date'])
-            list3.append(take['rank'])
+                take = self.daily_json['contents'][self.one_count]
 
-            self.one_count += 1
+                list1.append(PixivImage(take['illust_id']))
+                list2.append(self.daily_json['date'])
+                list3.append(take['rank'])
+                list4.append(take['yes_rank'])
 
-        curr_batch = DailyImages(
-            illust_attr=list1,
-            rank_date=list2,
-            rank=list3
-        )
-        self.curr_batch += curr_batch.que_tar
-        return curr_batch
+                self.one_count += 1
 
-    def first(self):
-        return self.curr_batch[0]
-
-    def last(self):
-        return self.curr_batch[len(self.curr_batch) - 1]
-
-    def curr(self):
-        return self.curr_batch[self.subscript]
-
-    def prev(self):
-        if self.subscript > 0:
-            self.subscript -= 1
-            return self.curr_batch[self.subscript]
+            curr_batch = DailyImages(
+                illust_attr=list1,
+                rank_date=list2,
+                rank=list3,
+                yes_rank=list4
+            )
+            self.que_tar += curr_batch.que_tar
+            return self.curr()
         else:
-            print('first!')
-
-    def next(self):
-        if self.subscript < len(self.curr_batch) - 1:
-            self.subscript += 1
-            return self.curr_batch[self.subscript]
-        else:
-            print('last!')
+            return self.next_page().batch()
 
     def prev_date(self):
         if self.daily_json['prev_date']:
             self.rank_total = 0
-            self.curr_batch.clear()
+            self.step_number = 0
+            self.one_count = 0
+            self.que_tar.clear()
             self.params = {
                 'date': self.daily_json['prev_date']
             }
@@ -451,7 +445,9 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
     def next_date(self):
         if self.daily_json['next_date']:
             self.rank_total = 0
-            self.curr_batch.clear()
+            self.step_number = 0
+            self.one_count = 0
+            self.que_tar.clear()
             self.params.update({
                 'date': self.daily_json['next_date']
             })
@@ -459,6 +455,7 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
 
     def prev_page(self):
         if self.daily_json['prev']:
+            self.one_count = 0
             self.params.update({
                 'p': self.daily_json['prev']
             })
@@ -466,6 +463,7 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
 
     def next_page(self):
         if self.daily_json['next']:
+            self.one_count = 0
             self.params.update({
                 'p': self.daily_json['next']
             })
