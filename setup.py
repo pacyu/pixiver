@@ -14,7 +14,7 @@ setup(
     install_requires=['beautifulsoup4', 'requests', 'pillow'],
     packages=find_packages(),
     url='https://github.com/darkchii/pixiver',
-    classifier=[
+    classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
