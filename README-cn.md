@@ -1,12 +1,14 @@
 pixiver
 =======
 
+[![logo2](https://img.shields.io/badge/pypi-0.0.2a0-blue.svg)](https://pypi.org/project/requests/)
+
 这是一个面向 `pixiv` 的 python 库。
 
 安装
 ----
 
-`pip install pixiver`
+`pip install -U pixiver`
 
 入门指南
 -------
@@ -63,116 +65,185 @@ Initialized!
 * 使用 `batch()` 一次加载排行榜前 50 个图像进行处理。但对于网络不好的使用者来说，这可能会很头痛。不过我还提供了另一种加载方式（见方法2）。
 
 ```
-bat = r.batch()
+r.batch()
 ```
 
-开始浏览
+获取当前批次第一个作品
 
 ```
-# 获取当前批次第一个作品
->>> bf = bat.first()
+>>> rf = r.first()
+```
 
-# 查看图像尺寸
->>> bf['illust_attrs'].imsize()
+查看图像尺寸
+
+```
+>>> rf['illust_attrs'].imsize()
 (1228, 1736)
+```
 
-# 查看作品原图链接
->>> bf['illust_attrs'].original_url()
+查看作品原图链接
+
+```
+>>> rf['illust_attrs'].original_url()
 'https://i.pximg.net/img-original/....jpg'
+```
 
-# 查看作品迷你图链接
->>> bf['illust_attrs'].mini_url()
+查看作品迷你图链接
+
+```
+>>> rf['illust_attrs'].mini_url()
 'https://i.pximg.net/c/48x48/img-master/....jpg'
+```
 
-# 作品标题
->>> bf['illust_attrs'].illust_title()
+作品标题
+
+```
+>>> rf['illust_attrs'].illust_title()
 '森倉円初個展「Girl Friend」メインビジュアル'
+```
 
-# 作者昵称
->>> bf['illust_attrs'].user_name()
+作者昵称
+
+```
+>>> rf['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
+```
 
-# 作品 id
->>> bf['illust_attrs'].illust_id()
+作品 id
+
+```
+>>> rf['illust_attrs'].illust_id()
 '72810724'
+```
 
-# 作品创建日期（未作处理）
->>> bf['illust_attrs'].create_date()
+作品创建日期（未作处理）
+
+```
+>>> rf['illust_attrs'].create_date()
 '2019-01-23T15:00:05+00:00'
+```
 
-# 作品上传日期（未作处理）
->>> bf['illust_attrs'].upload_date()
+作品上传日期（未作处理）
+
+```
+>>> rf['illust_attrs'].upload_date()
 '2019-01-23T15:00:05+00:00'
+```
 
-# 作品链接（这类图尺寸应该是除原图外，质量最好的）
->>> bf['illust_attrs'].regular_url()
+
+作品链接（这类图应该是除原图外，质量最好的）
+
+```
+>>> rf['illust_attrs'].regular_url()
 'https://i.pximg.net/img-master/....jpg'
+```
 
-# 查看作品浏览数
->>> bf['illust_attrs'].view_count()
+查看作品浏览数
+
+```
+>>> rf['illust_attrs'].view_count()
 103514
+```
 
-# 查看点赞数
->>> bf['illust_attrs'].like_count()
+查看点赞数
+
+```
+>>> rf['illust_attrs'].like_count()
 ...
+```
 
-# 查看收藏数
->>> bf['illust_attrs'].mark_count()
+查看收藏数
+
+```
+>>> rf['illust_attrs'].mark_count()
 ...
+```
 
-# 查看评论数
->>> bf['illust_attrs'].comment_count()
+查看评论数
+
+```
+>>> rf['illust_attrs'].comment_count()
 ...
+```
 
-# 查看作品排名
->>> bf['rank']
+查看作品排名
+
+```
+>>> rf['rank']
 1
+```
 
-# 查看排名日期
->>> bf['rank_date']
+查看排名日期
+
+```
+>>> rf['rank_date']
 '20190125'
+```
 
-# 查看评论
->>> vcbf = bf['illust_attrs'].view_comment()
->>> vcbf.first()['comment']
-...
->>> vcbf.first()['userName']
-...
->>> vcbf.next()['comment']
-...
+查看评论
 
-# 查看作品标签信息
->>> tags = bf['illust_attrs'].view_tags()
+```
+>>> vcrf = rf['illust_attrs'].view_comment()
+>>> vcrf.first()['comment']
+...
+>>> vcrf.first()['userName']
+...
+>>> vcrf.next()['comment']
+...
+```
+
+查看作品标签信息
+
+```
+>>> tags = rf['illust_attrs'].view_tags()
 >>> tf = tags.first()
 >>> tf
 <image.ImageTag object 0x00..>
 >>> tf.view_tag()
 # tag
 ...
+```
 
-# 一种更快的获取所有标签的方法
->>> for tag in bf['illust_attrs'].all()['tags']['tags']:
+一种更快的获取所有标签的方法
+
+```
+>>> for tag in rf['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
 # output some tags
 ...
+```
 
-# 查看图像
->>> bf['illust_attrs'].view_regul_image()
+查看图像
 
-# 喜欢就保存一个（默认保存原图，否则保存前一个查看图片命令下的图像类型）
->>> bf['illust_attrs'].save() # 尺寸为 regular 类型
+```
+>>> rf['illust_attrs'].view_regul_image()
+```
+
+喜欢就保存一个（默认保存原图，否则保存前一个查看图片命令下的图像类型）
+
+```
+>>> rf['illust_attrs'].save() # 尺寸为 regular 类型
 Saved!
+```
 
-# 一种直接保存原图的方式
->>> bf['illust_attrs'].save_original()
+一种直接保存原图的方式
+
+```
+>>> rf['illust_attrs'].save_original()
 Saved!
+```
 
-# 获取下一个作品
->> bn = bat.next()
+获取下一个作品
 
-# 查看相关信息用法，同上
->>> bat.next()['illust_attrs'].imsize()
+```
+>> rn = r.next()
+```
+
+用法与前一个一样
+
+```
+>>> rn['illust_attrs'].imsize()
 (1500, 1062)
 ```
 
@@ -187,15 +258,27 @@ Initialized!
 """
 
 >>> ro = r.one()
+```
 
-# 用法一样很简单
+用法也一样
 
+查看浏览量
+
+```
 >>> ro['illust_attrs'].view_count()
 108805
+```
 
+作者昵称
+
+```
 >>> ro['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
+```
 
+查看标签
+
+```
 >>> t = ro['illust_attrs'].view_tags()
 >>> tf = t.first()
 >>> tf.tag_info()
@@ -212,24 +295,40 @@ Initialized!
 桜の花
 美少女
 ロングヘアー
+```
 
-# 查看喜欢数
+查看点赞数
+
+```
 >>> ro['illust_attrs'].like_count()
 14166
+```
 
-# 查看收藏数
+查看收藏数
+
+```
 >>> ro['illust_attrs'].mark_count()
 17145
+```
 
-# 查看评论数
+查看评论数
+
+```
 >>> ro['illust_attrs'].comment_count()
 64
+```
 
-# 查看评论
+查看评论
+
+```
 >>> vcro = ro['illust_attrs'].view_comments()
 >>> vcro.first()['comment']
 ...
+>>> vcro.curr()['comment']
+...
 >>> vcro.next()['comment']
+...
+>>> vcro.last()['comment']
 ...
 ```
 
@@ -263,30 +362,44 @@ Crawler Initializing...
 Initialized!
 ```
 
-浏览相关信息
+查看用户昵称
 
 ```
-# 查看用户昵称
 >>> r.username
 'ファルケン@'
+```
 
-# 查看关注总量
+查看关注总量
+
+```
 >>> r.following_total
 548
+```
 
-# 是否是会员
+是否是会员
+
+```
 >>> r.premium
 True
+```
 
-# 社交链接，返回 json
+社交链接，返回数据类型： json
+
+```
 >>> r.social
 {'twitter': {'url': 'https://twitter.com/YutoZin'}}
+```
 
-# 查看其关注用户信息，返回 json
+查看其关注用户信息，返回数据类型： json 
+
+```
 >>> r.following_all.first()
 {'userId': '490219', 'userName': 'Hiten', 'profileImageUrl': ...}
+```
 
-# 查看作品 id
+查看作品 id
+
+```
 >>> r.illusts.first()
 '72318445'
 >>> r.illusts.next()
@@ -299,39 +412,68 @@ True
 ```
 >>> from pixiver import imageiv
 >>> pi = imageiv.PixivImage(72773786)
+```
 
-# 查看评论
+查看评论
+
+```
 >>> coms = pi.view_comments()
-
-# 第一条评论
 >>> coms.first()['comment']
 'face can be better'
+```
 
-# 用户昵称
+评论者的昵称
+
+```
 >>> coms.first()['userName']
 '...'
+```
 
-# 下一条评论
+下一条评论
+
+```
 >>> coms.next()['comment']
 ...
+```
 
-# 查看原图链接
+最后一条评论
+
+```
+>>> coms.last()['comment']
+...
+```
+
+原图链接
+
+```
 >>> pi.original_url()
-'https://i.pximg.net/img-original/img/2019/01/21/18/00/12/72773786_p0.jpg'
+'https://i.pximg.net/img....jpg'
+```
 
-# 查看喜欢作品的人数
+喜欢作品的人数
+
+```
 >>> pi.like_count()
 12183
+```
 
-# 作者昵称
+作者昵称
+
+```
 >>> pi.user_name()
 '河CY'
+```
 
-# 作品收藏数
+作品收藏数
+
+```
 >>> pi.mark_count()
 14370
+```
 
-# 作品评论数
+作品评论数
+
+```
 >>> pi.comment_count()
 64
 ```
@@ -387,3 +529,7 @@ True
 ---
 
 欢迎大家对一些用法提出更好的意见！
+
+欢迎对指南做更好的补充说明！
+
+欢迎一起做贡献！
