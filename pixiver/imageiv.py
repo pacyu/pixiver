@@ -318,6 +318,7 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
     curr_batch = []
     rank_total = 0
     subscript = 0
+    one_count = 0
     params = {
         'date': '',
         'p': '',
@@ -380,32 +381,39 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay):
             self.__init__(daily)
         else:
             self.__run__(self.params)
-            return self
+        return self
 
     def one(self):
+        self.one_count += 1
+        self.subscript = self.one_count
         self.curr_one = {
             'illust_attrs': PixivImage(
-                self.daily_json['contents'][self.subscript]['illust_id']
+                self.daily_json['contents'][self.one_count]['illust_id']
             ),
             'rank_date': self.daily_json['date'],
-            'rank': self.daily_json['contents'][self.subscript]['rank']
+            'rank': self.daily_json['contents'][self.one_count]['rank']
         }
         self.curr_batch.append(self.curr_one)
         return self.curr_one
 
     def batch(self):
         list1, list2, list3 = [], [], []
-        for take in self.daily_json['contents']:
+        while self.one_count < 50:
+
+            take = self.daily_json['contents'][self.one_count]
+
             list1.append(PixivImage(take['illust_id']))
             list2.append(self.daily_json['date'])
             list3.append(take['rank'])
+
+            self.one_count += 1
 
         curr_batch = DailyImages(
             illust_attr=list1,
             rank_date=list2,
             rank=list3
         )
-        self.curr_batch = curr_batch.que_tar
+        self.curr_batch += curr_batch.que_tar
         return curr_batch
 
     def first(self):
