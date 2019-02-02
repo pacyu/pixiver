@@ -183,7 +183,7 @@ r.batch()
 查看评论
 
 ```
->>> vcrf = rf['illust_attrs'].view_comment()
+>>> vcrf = rf['illust_attrs'].view_comments()
 >>> vcrf.first()['comment']
 ...
 >>> vcrf.first()['userName']
@@ -253,7 +253,7 @@ Saved!
 """
 from pixiver.imageiv import Daily
 r = Daily(20190125)
-Crawler Initializing...
+Pixiver Initializing...
 Initialized!
 """
 
@@ -358,7 +358,7 @@ r = User(6415776)
 与排行榜一样，加载后会输出：
 
 ```
-Crawler Initializing...
+Pixiver Initializing...
 Initialized!
 ```
 
@@ -520,7 +520,7 @@ True
 
 暂时不支持以下功能：
 
- * 使用个人账户 cookie 来完成作品收藏、点赞、关注喜欢的作者、发表评论等功能
+ * 使用个人账户来完成作品收藏、点赞、关注喜欢的作者、发表评论等功能
  * 查看表情
  * 会员相关功能
  * 命令行版
@@ -528,8 +528,10 @@ True
 最后
 ---
 
-欢迎大家对一些用法提出更好的意见！
+欢迎大家对用法提出更好的意见！
 
 欢迎对指南做更好的补充说明！
 
 欢迎一起做贡献！
+
+谢谢支持！

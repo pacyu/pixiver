@@ -6,7 +6,7 @@ class ConfigHeaders(object):
 
 
 class PixivInitSay:
-    init_run = 'Crawler Initializing...'
+    init_run = 'Pixiver Initializing...'
     init_finished = 'Initialized!'
 
 
