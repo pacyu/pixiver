@@ -3,7 +3,7 @@ pixiver
 
 [![logo2](https://img.shields.io/badge/pypi-0.0.3-blue.svg)](https://pypi.org/project/pixiver/)
 
-这是一个面向 `pixiv` 的 python 库。
+这是一个面向 `pixiv` 开发者的 python 包。
 
 安装
 ----
