@@ -56,7 +56,7 @@ res = r.run(20190125)
 对于正确合法的日期，加载成功后将会显示：
 
 ```
-Crawler Initializing...
+Pixiver Initializing...
 Initialized!
 ```
 
