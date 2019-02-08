@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.3-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.4-blue.svg)](https://pypi.org/project/pixiver/)
 
 这是一个面向 `pixiv` 开发者的 python 包。
 
