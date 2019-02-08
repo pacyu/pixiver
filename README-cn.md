@@ -1,7 +1,8 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.5-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.6-blue.svg)](https://pypi.org/project/pixiver/)
+![logo2](https://img.shields.io/badge/build-passing-green.svg)
 
 这是一个面向 `pixiv` 开发者的 python 包。
 
@@ -31,7 +32,7 @@ pixiver
 
  + 其他。
 
-是否满足您的需求呢？如果有，那么就让我们开始学习如何使用吧！（个人建议使用 python console）
+下面开始学习如何使用吧！（个人建议使用 python console）
 
 1. 每日排行：
 
