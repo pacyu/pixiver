@@ -321,20 +321,21 @@ class DailyImages(baseiv.BaseQueue):
 
 
 class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay, baseiv.BaseQueue):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=daily'
+    name = 'daily'
+    init_url = 'https://www.pixiv.net/ranking.php'
     rank_total = 0
     one_count = 0
-    params = {
-        'date': '',
-        'p': '',
-        'format': 'json'
-    }
     current_page = 1
     current_date = None
 
     def __init__(self, daily=None):
         super().__init__()
+        self.params = {
+            'mode': self.name,
+            'date': '',
+            'p': '',
+            'format': 'json'
+        }
         if daily:
             reg = re.compile(
                 r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
@@ -486,50 +487,40 @@ class Daily(baseiv.ConfigHeaders, baseiv.PixivInitSay, baseiv.BaseQueue):
 
 
 class Weekly(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=weekly'
+    name = 'weekly'
 
 
 class Mouthly(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=monthly'
+    name = 'monthly'
 
 
 class Rookie(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=rookie'
+    name = 'rookie'
 
 
 class Original(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=original'
+    name = 'original'
 
 
 class Male(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=male'
+    name = 'male'
 
 
 class Female(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=female'
+    name = 'female'
 
 
 class DailyR(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=daily_r18'
+    name = 'daily_r18'
 
 
 class WeeklyR(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=weekly_r18'
+    name = 'weekly_r18'
 
 
 class MaleR(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=male_r18'
+    name = 'male_r18'
 
 
 class FemaleR(Daily):
-    init_url = 'https://www.pixiv.net/ranking.php?' \
-               'mode=female_r18'
+    name = 'female_r18'
