@@ -2,7 +2,7 @@ pixiver
 =======
 
 [![logo2](https://img.shields.io/badge/pypi-0.0.7-blue.svg)](https://pypi.org/project/pixiver/)
-[![logo2](https://img.shields.io/badge/build-passing-green.svg)](https://travis-ci.org/darkchii/pixiver)
+![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个面向 `pixiv` 开发者的 python 包。
 
