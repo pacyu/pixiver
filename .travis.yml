@@ -18,5 +18,5 @@ deploy:
   on:
     tags: true
     distributions: sdist bdist_wheel
-    repo: pixiver/pixiver
+    repo: darkchii/pixiver
     python: "3.6"
