@@ -5,7 +5,7 @@ with open("README-cn.md", "r", encoding='utf8') as fh:
 
 setup(
     name="pixiver",
-    version="0.0.4-dev",
+    version="0.0.4",
     author="darkchii",
     author_email="darkchii@qq.com",
     description="A free python package for crawling and downloading works on the pixiv website.",
