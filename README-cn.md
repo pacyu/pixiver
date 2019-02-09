@@ -491,6 +491,16 @@ True
 
 4. 其他：
 
+浏览每日 R-18 排行
+
+```
+>>> from pixiver.rankiv import DailyR
+>>> dr = DailyR(daily=20190207, cookie=True)
+Pixiver Initializing...
+Initialized!
+>>> gt = dr.one()
+```
+
 可以下载标签图
 
 ```

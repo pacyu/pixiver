@@ -72,11 +72,8 @@ class Pixiv(ConfigHeaders):
             'https://www.pixiv.net/ranking.php?mode=daily',
             timeout=5
         )
-        doc = r.text
-        soup = BeautifulSoup(doc, 'html.parser')
-        script = soup.find_all('script')
-        reg = re.compile(r'.*token = "([a-z0-9]{32})"?.*')
-        token = reg.findall(script[11].string)
+        reg = re.compile(r'.*pixiv.context.token = "([a-z0-9]{32})"?.*')
+        token = reg.findall(r.text)
         return token
 
     def run(self):
