@@ -5,10 +5,10 @@ with open("README-cn.md", "r", encoding='utf8') as fh:
 
 setup(
     name="pixiver",
-    version="0.0.7",
+    version="0.0.7.1000",
     author="darkchii",
     author_email="darkchii@qq.com",
-    description="A free python package for crawling and downloading works on the pixiv website.",
+    description="This is a python package for get illustration on the pixiv by ajax interfaces.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=['beautifulsoup4', 'requests', 'pillow'],

@@ -1,10 +1,10 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.7.1000-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
-这是一个面向 `pixiv` 开发者的 python 包。
+这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
 
 安装
 ----
@@ -18,13 +18,19 @@ pixiver
 
 注意: 删除线表示 pixiv 没有提供这类服务或 api。
 
- + 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎、每日 + R-18、每周 + R-18、~~每月 + R-18~~、~~新人 + R-18~~、~~原创 + R-18~~、受男性欢迎 + R-18、受女性欢迎 + R-18排行榜作品。（不需要登录）
+ + 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎排行榜作品。（不需要登录）
+
+ + 可浏览 每日 + R-18、每周 + R-18、受男性欢迎 + R-18、受女性欢迎 + R-18 排行榜与其它 R-18 相关内容。（需要登录）
 
  + 可根据作品 id 查看作品相关信息。（不需要登录）
 
  + 可浏览作品下的所有评论。（不需要登录）
 
  + 可浏览作品标签、排名、点赞数、收藏数等信息。（不需要登录）
+ 
+ + 可点赞、收藏喜欢的作品。（需要登录）
+ 
+ + 可关注喜欢的作者。（需要登录）
 
  + 可下载不同尺寸的作品。（不需要登录）
 
@@ -39,7 +45,7 @@ pixiver
 首先导入包并创建对象
 
 ```python
-from pixiver.imageiv import Daily
+from pixiver.rankiv import Daily
 
 r = Daily(20190125)
 # or Daily('2019-01-25')
@@ -252,7 +258,7 @@ Saved!
 
 ```
 """
-from pixiver.imageiv import Daily
+from pixiver.rankiv import Daily
 r = Daily(20190125)
 Pixiver Initializing...
 Initialized!
@@ -336,17 +342,21 @@ Initialized!
 其他排行用法相同，类名分别为：
 
 ```
-imageiv.Daily
-imageiv.Weekly
-imageiv.Mouthly
-imageiv.Rookie
-imageiv.Original
-imageiv.Male
-imageiv.Female
-imageiv.DailyR
-imageiv.WeeklyR
-imageiv.MaleR
-imageiv.FemaleR
+rankiv.Daily
+rankiv.Weekly
+rankiv.Mouthly
+rankiv.Rookie
+rankiv.Original
+rankiv.Male
+rankiv.Female
+```
+
+R-18 排行榜需要登录（可能不能浏览）
+```
+rankiv.DailyR
+rankiv.WeeklyR
+rankiv.MaleR
+rankiv.FemaleR
 ```
 
 2. User 类可根据 `pixiv` 用户 id 查看相关信息
@@ -493,9 +503,6 @@ True
 作品的几种尺寸
 
 ```
->>> from pixiver.imageiv import PixivImage
->>> r = PixivImage(imageid)
-
 # 查看 mini 图
 >>> r.view_mini_image()
 ...
@@ -521,8 +528,7 @@ True
 
 暂时不支持以下功能：
 
- * 使用个人账户来完成作品收藏、点赞、关注喜欢的作者、发表评论等功能
- * 查看表情
+ * 查看表情、动图
  * 会员相关功能
  * 命令行版
 

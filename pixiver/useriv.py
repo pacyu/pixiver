@@ -1,4 +1,4 @@
-from pixiver import pixiv, baseiv
+from pixiver import pixiv, baseiv, rankiv
 from pixiver.exceptions import AjaxRequestError
 
 
@@ -84,3 +84,28 @@ class User(pixiv.Pixiv, baseiv.PixivInitSay):
 
     def run(self, user_id=None):
         self.__init__(user_id)
+
+    def bookmark(self):
+        if 'Cookie' not in self.sess.headers:
+            with open('C:/cookie.txt') as f:
+                cookie = f.read()
+
+                self.sess.headers.update({
+                    'Cookie': cookie,
+                    'x-csrf-token': self.token
+                })
+        rtmsg = self.sess.post(
+            'https://www.pixiv.net/bookmark_add.php',
+            data={
+                'mode': 'add',
+                'type': 'user',
+                'user_id': self.user_id,
+                'tags': '',
+                'restrict': 0,
+                'format': 'json',
+            }
+        ).json()
+        if not rtmsg:
+            print('Bookmarked!')
+        else:
+            raise AjaxRequestError(rtmsg['message'])
