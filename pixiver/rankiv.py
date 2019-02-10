@@ -34,7 +34,7 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
 
     def __init__(self, ymd=None, filters='complex', **kwargs):
         """
-        :param daily:
+        :param ymd:
             Example:
             ~~~~~~~
                 20190101
@@ -114,9 +114,9 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
             )
         self.init_finished = 'Load finished!'
 
-    def run(self, daily=None):
-        if daily:
-            self.__init__(daily=daily)
+    def run(self, ymd=None):
+        if ymd:
+            self.__init__(ymd=ymd)
         else:
             self.__run__(self.params)
         return self
