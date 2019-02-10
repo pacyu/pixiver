@@ -32,7 +32,7 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
     current_page = None
     current_date = None
 
-    def __init__(self, daily=None, filters='complex', **kwargs):
+    def __init__(self, ymd=None, filters='complex', **kwargs):
         """
         :param daily:
             Example:
@@ -66,11 +66,11 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
                 'content': filters,
             })
 
-        if daily:
+        if ymd:
             reg = re.compile(
                 r'[0-9]{4}[^a-zA-Z0-9]?[0-9]{2}[^a-zA-Z0-9]?[0-9]{2}'
             )
-            s = reg.fullmatch(str(daily))
+            s = reg.fullmatch(str(ymd))
             date = s.string
             date = date.replace('/', '')\
                 .replace('-', '')\
@@ -230,9 +230,9 @@ class DailyR(Daily):
     name = 'daily_r18'
 
     def __init__(self, username=None, password=None,
-                 daily=None, filters='complex', cookie=True):
+                 ymd=None, filters='complex', cookie=True):
         super().__init__(
-            daily=daily,
+            ymd=ymd,
             filters=filters,
             username=username,
             password=password,

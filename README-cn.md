@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7.1001-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.7.1002-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -503,6 +503,25 @@ Initialized!
 ```
 
 注：cookie 保存在 `C:/cookie.txt`，需要手动登录页面后获取。
+
+点赞、收藏、关注
+
+```
+>>> from pixiver.rankiv import DailyR
+>>> dr = DailyR(daily=20190207, cookie=True)
+Pixiver Initializing...
+Initialized!
+>>> gt = dr.one()
+>>> gt['illust_attrs'].like()
+Liked!
+>>> gt['illust_attrs'].mark()
+Marked!
+>>> gt['illust_attrs'].bookmark()
+Bookmarked!
+>>> gt['illust_attrs'].user_name()
+'おぶい'
+>>>
+```
 
 可以下载标签图
 
