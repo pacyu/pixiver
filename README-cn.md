@@ -42,7 +42,7 @@ pixiver
 
 1. 每日排行：
 
-首先导入包并创建对象
+首先导入包并通过给定日期初始化对象
 
 ```python
 from pixiver.rankiv import Daily
@@ -351,7 +351,7 @@ rankiv.Male
 rankiv.Female
 ```
 
-R-18 排行榜需要登录（可能不能浏览）
+R-18 排行榜需要登录（目前只能手动设置 cookie 才能浏览）
 ```
 rankiv.DailyR
 rankiv.WeeklyR
@@ -491,7 +491,7 @@ True
 
 4. 其他：
 
-浏览每日 R-18 排行
+浏览 R-18 排行
 
 ```
 >>> from pixiver.rankiv import DailyR

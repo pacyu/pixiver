@@ -241,17 +241,19 @@ class PixivImage(pixiv.Pixiv):
 
     def like(self):
         if 'Cookie' not in self.sess.headers:
-            with open('C:/cookie.txt') as f:
-                cookie = f.read()
+            cookie = open('C:/cookie.txt').read()
 
-                self.sess.headers.update({
-                    'Cookie': cookie,
-                    'x-csrf-token': self.token
-                })
+            self.sess.headers.update({
+                'Cookie': cookie,
+            })
+
         rtmsg = self.sess.post(
             'https://www.pixiv.net/ajax/illusts/like',
             json={
                 'illust_id': self.illust_id(),
+            },
+            headers={
+                'x-csrf-token': self.token
             }
         ).json()
         if not rtmsg['error']:
@@ -261,13 +263,12 @@ class PixivImage(pixiv.Pixiv):
 
     def mark(self):
         if 'Cookie' not in self.sess.headers:
-            with open('C:/cookie.txt') as f:
-                cookie = f.read()
+            cookie = open('C:/cookie.txt').read()
 
-                self.sess.headers.update({
-                    'Cookie': cookie,
-                    'x-csrf-token': self.token
-                })
+            self.sess.headers.update({
+                'Cookie': cookie,
+            })
+
         rtmsg = self.sess.post(
             'https://www.pixiv.net/ajax/illusts/bookmarks/add',
             json={
@@ -275,6 +276,9 @@ class PixivImage(pixiv.Pixiv):
                 'illust_id': self.illust_id(),
                 'restrict': 0,
                 'tags': []
+            },
+            headers={
+                'x-csrf-token': self.token
             }
         ).json()
         if not rtmsg['error']:
@@ -284,13 +288,12 @@ class PixivImage(pixiv.Pixiv):
 
     def bookmark(self):
         if 'Cookie' not in self.sess.headers:
-            with open('C:/cookie.txt') as f:
-                cookie = f.read()
+            cookie = open('C:/cookie.txt').read()
 
-                self.sess.headers.update({
-                    'Cookie': cookie,
-                    'x-csrf-token': self.token
-                })
+            self.sess.headers.update({
+                'Cookie': cookie,
+            })
+
         rtmsg = self.sess.post(
             'https://www.pixiv.net/bookmark_add.php',
             data={
@@ -300,6 +303,9 @@ class PixivImage(pixiv.Pixiv):
                 'tags': '',
                 'restrict': 0,
                 'format': 'json',
+            },
+            headers={
+                'x-csrf-token': self.token
             }
         ).json()
         if not rtmsg:

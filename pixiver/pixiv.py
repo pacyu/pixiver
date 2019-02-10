@@ -17,17 +17,17 @@ class Pixiv(ConfigHeaders):
         super().__init__()
         self.username = username
         self.password = password
-        self.token = self.get_token()
         self.kvpair.update(kwargs)
 
         if self.kvpair['cookie']:
-            with open('C:/cookie.txt') as f:
-                cookie = f.read()
+            cookie = open('C:/cookie.txt').read()
 
-                self.sess.headers.update({
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Cookie': cookie
-                })
+            self.sess.headers.update({
+                'X-Requested-With': 'XMLHttpRequest',
+                'Cookie': cookie
+            })
+
+        self.token = self.get_token()
 
         if username and password:
             self.__login__()
@@ -73,7 +73,7 @@ class Pixiv(ConfigHeaders):
             timeout=5
         )
         reg = re.compile(r'.*pixiv.context.token = "([a-z0-9]{32})"?.*')
-        token = reg.findall(r.text)
+        token = reg.findall(r.text)[0]
         return token
 
     def run(self):
