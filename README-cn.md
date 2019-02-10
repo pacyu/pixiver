@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7.1002-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.7.1003-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
