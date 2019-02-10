@@ -495,7 +495,7 @@ True
 
 ```
 >>> from pixiver.rankiv import DailyR
->>> dr = DailyR(daily=20190207, cookie=True)
+>>> dr = DailyR(ymd=20190207, cookie=True)
 Pixiver Initializing...
 Initialized!
 >>> gt = dr.one()
@@ -508,7 +508,7 @@ Initialized!
 
 ```
 >>> from pixiver.rankiv import DailyR
->>> dr = DailyR(daily=20190207, cookie=True)
+>>> dr = DailyR(ymd=20190207, cookie=True)
 Pixiver Initializing...
 Initialized!
 >>> gt = dr.one()
