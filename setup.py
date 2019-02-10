@@ -5,7 +5,7 @@ with open("README-cn.md", "r", encoding='utf8') as fh:
 
 setup(
     name="pixiver",
-    version="0.0.7.1003",
+    version="0.0.7.1004",
     author="darkchii",
     author_email="darkchii@qq.com",
     description="This is a python package for get illustration on the pixiv by ajax interfaces.",
