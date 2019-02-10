@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7.1000-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.7.1001-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -491,7 +491,7 @@ True
 
 4. 其他：
 
-浏览 R-18 排行
+浏览 R-18 排行（暂时不能通过账户及密码登录获取 cookie）
 
 ```
 >>> from pixiver.rankiv import DailyR
@@ -499,7 +499,10 @@ True
 Pixiver Initializing...
 Initialized!
 >>> gt = dr.one()
+...
 ```
+
+注：cookie 保存在 `C:/cookie.txt`，需要手动登录页面后获取。
 
 可以下载标签图
 
