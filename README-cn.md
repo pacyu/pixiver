@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7.1004-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.7.0216-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -227,10 +227,10 @@ r.batch()
 >>> rf['illust_attrs'].view_regul_image()
 ```
 
-喜欢就保存一个（默认保存原图，否则保存前一个查看图片命令下的图像类型）
+喜欢就保存一个（默认保存查看的图像类型）
 
 ```
->>> rf['illust_attrs'].save() # 尺寸为 regular 类型
+>>> rf['illust_attrs'].save() # 尺寸为 regular
 Saved!
 ```
 

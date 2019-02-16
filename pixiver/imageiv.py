@@ -35,8 +35,12 @@ class PixivImage(pixiv.Pixiv):
     base_tags_que = None
     user_comments = None
     im_data = None
+    im_mini = None
+    im_small = None
+    im_thumb = None
+    im_regular = None
+    im_original = None
     im_name = None
-    orig_im = None
 
     def __init__(self, illust_id, **kwargs):
         super().__init__(**kwargs)
@@ -122,7 +126,7 @@ class PixivImage(pixiv.Pixiv):
         return self.user_comments
 
     def view_mini_image(self):
-        if not self.im_data:
+        if not self.im_mini:
             illust_url = self.mini_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -134,13 +138,15 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.im_data = rg.content
+            self.im_mini = rg.content
 
-        im = Image.open(BytesIO(self.im_data))
+        self.im_data = self.im_mini
+
+        im = Image.open(BytesIO(self.im_mini))
         im.show()
 
     def view_thumb_image(self):
-        if not self.im_data:
+        if not self.im_thumb:
             illust_url = self.thumb_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -152,13 +158,15 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.im_data = rg.content
+            self.im_thumb = rg.content
 
-        im = Image.open(BytesIO(self.im_data))
+        self.im_data = self.im_thumb
+
+        im = Image.open(BytesIO(self.im_thumb))
         im.show()
 
     def view_small_image(self):
-        if not self.im_data:
+        if not self.im_small:
             illust_url = self.small_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -170,13 +178,15 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.im_data = rg.content
+            self.im_small = rg.content
 
-        im = Image.open(BytesIO(self.im_data))
+        self.im_data = self.im_small
+
+        im = Image.open(BytesIO(self.im_small))
         im.show()
 
     def view_regul_image(self):
-        if not self.im_data:
+        if not self.im_regular:
             illust_url = self.regular_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -188,13 +198,15 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.im_data = rg.content
+            self.im_regular = rg.content
 
-        im = Image.open(BytesIO(self.im_data))
+        self.im_data = self.im_regular
+
+        im = Image.open(BytesIO(self.im_regular))
         im.show()
 
     def view_orig_image(self):
-        if not self.im_data:
+        if not self.im_original:
             illust_url = self.original_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -206,21 +218,21 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.im_data = rg.content
+            self.im_original = rg.content
 
-        im = Image.open(BytesIO(self.im_data))
+        self.im_data = self.im_original
+
+        im = Image.open(BytesIO(self.im_original))
         im.show()
 
     def save(self):
-        if not self.im_data:
-            self.save_original()
-        else:
+        if self.im_data:
             with open(self.im_name, 'wb') as f:
                 f.write(self.im_data)
             print('Saved!')
 
     def save_original(self):
-        if not self.orig_im:
+        if not self.im_original:
             illust_url = self.original_url()
             self.im_name = illust_url.split('/')[-1]
             headers = {
@@ -232,11 +244,10 @@ class PixivImage(pixiv.Pixiv):
                 headers=headers,
                 timeout=2
             )
-            self.orig_im = rg.content
-            self.im_data = self.orig_im
+            self.im_original = rg.content
 
         with open(self.im_name, 'wb') as f:
-            f.write(self.orig_im)
+            f.write(self.im_original)
         print('Saved!')
 
     def like(self):
