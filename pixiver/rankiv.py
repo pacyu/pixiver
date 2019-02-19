@@ -1,30 +1,27 @@
 import re
-from pixiver import baseiv
-from pixiver import pixiv
-from pixiver.helperiv import check_date
-from pixiver.imageiv import PixivImage
+from pixiver import basiciv
+from pixiver.helper import check_date
+from pixiver.worksiv import Works
 
 
-class RankImages(baseiv.BaseQueue):
+class Batch(basiciv.Queue):
 
     def __init__(self, **kwargs):
         super().__init__()
         self.que_tar = [
             {
                 'illust_attrs': zip_[0],
-                'rank_date': zip_[1],
-                'rank': zip_[2],
-                'yes_rank': zip_[3]
+                'rank': zip_[1],
+                'yes_rank': zip_[2]
             } for zip_ in zip(
-                kwargs['illust_attr'],
-                kwargs['rank_date'],
+                kwargs['illust_attrs'],
                 kwargs['rank'],
                 kwargs['yes_rank']
             )
         ]
 
 
-class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
+class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
     name = 'daily'
     rank_url = 'https://www.pixiv.net/ranking.php'
     rank_total = 0
@@ -50,7 +47,7 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
                 - manga
             default complex
         """
-        super().__init__(
+        super(Daily, self).__init__(
             **kwargs
         )
 
@@ -117,17 +114,14 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
     def run(self, ymd=None):
         if ymd:
             self.__init__(ymd=ymd)
-        else:
-            self.__run__(self.params)
         return self
 
     def one(self):
         if self.one_count < 50:
             curr_one = {
-                'illust_attrs': PixivImage(
+                'illust_attrs': Works(
                     self.rjson['contents'][self.one_count]['illust_id']
                 ),
-                'rank_date': self.rjson['date'],
                 'rank': self.rjson['contents'][self.one_count]['rank'],
                 'yes_rank': self.rjson['contents'][self.one_count]['yes_rank']
             }
@@ -140,23 +134,21 @@ class Daily(pixiv.Pixiv, baseiv.PixivInitSay, baseiv.BaseQueue):
     def batch(self):
 
         if self.one_count < 50:
-            list1, list2, list3, list4 = [], [], [], []
+            list1, list2, list3 = [], [], []
             while self.one_count < 50:
 
                 take = self.rjson['contents'][self.one_count]
 
-                list1.append(PixivImage(take['illust_id']))
-                list2.append(self.rjson['date'])
-                list3.append(take['rank'])
-                list4.append(take['yes_rank'])
+                list1.append(Works(take['illust_id']))
+                list2.append(take['rank'])
+                list3.append(take['yes_rank'])
 
                 self.one_count += 1
 
-            curr_batch = RankImages(
-                illust_attr=list1,
-                rank_date=list2,
-                rank=list3,
-                yes_rank=list4
+            curr_batch = Batch(
+                illust_attrs=list1,
+                rank=list2,
+                yes_rank=list3
             )
             self.que_tar += curr_batch.que_tar
             return self.curr()
@@ -206,7 +198,7 @@ class Weekly(Daily):
     name = 'weekly'
 
 
-class Mouthly(Daily):
+class Monthly(Daily):
     name = 'monthly'
 
 
@@ -229,15 +221,11 @@ class Female(Daily):
 class DailyR(Daily):
     name = 'daily_r18'
 
-    def __init__(self, username=None, password=None,
-                 ymd=None, filters='complex', cookie=True):
-        super().__init__(
+    def __init__(self, ymd=None, filters='complex', **kwargs):
+        super(DailyR, self).__init__(
             ymd=ymd,
             filters=filters,
-            username=username,
-            password=password,
-            return_to=self.rank_url + '?mode=' + self.name,
-            cookie=cookie
+            **kwargs
         )
 
 

@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.7.0216-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.8-blue.svg)](https://pypi.org/project/pixiver/)
 ![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -9,7 +9,21 @@ pixiver
 安装
 ----
 
-`pip install -U pixiver`
+`$ pip install -U pixiver`
+
+快速开始
+-------
+
+```python
+from pixiver.pixiv import Pixiv
+
+p = Pixiv(username='user', password='pw')
+pw = p.works(73225282)
+pw.mark()
+pw.like()
+pw.bookmark()
+pw.save_original()
+```
 
 入门指南
 -------
@@ -45,19 +59,11 @@ pixiver
 首先导入包并通过给定日期初始化对象
 
 ```python
-from pixiver.rankiv import Daily
+from pixiver.pixiv import Pixiv
 
-r = Daily(20190125)
-# or Daily('2019-01-25')
-# or Daily('2019/01/25')
-# or Daily('2019.01.25')
-```
-
-或者初始化对象后，再 run
-
-```
-r = Daily()
-res = r.run(20190125)
+p = Pixiv(username='username', password='password')
+# or Pixiv(cookie=True, path='../cookie')
+pr = p.rank(201902019)
 ```
 
 对于正确合法的日期，加载成功后将会显示：
@@ -72,68 +78,68 @@ Initialized!
 * 使用 `batch()` 一次加载排行榜前 50 个图像进行处理。但对于网络不好的使用者来说，这可能会很头痛。不过我还提供了另一种加载方式（见方法2）。
 
 ```
-r.batch()
+pr.batch()
 ```
 
 获取当前批次第一个作品
 
 ```
->>> rf = r.first()
+>>> prf = pr.first()
 ```
 
 查看图像尺寸
 
 ```
->>> rf['illust_attrs'].imsize()
+>>> prf['illust_attrs'].imsize()
 (1228, 1736)
 ```
 
 查看作品原图链接
 
 ```
->>> rf['illust_attrs'].original_url()
+>>> prf['illust_attrs'].original_url()
 'https://i.pximg.net/img-original/....jpg'
 ```
 
 查看作品迷你图链接
 
 ```
->>> rf['illust_attrs'].mini_url()
+>>> prf['illust_attrs'].mini_url()
 'https://i.pximg.net/c/48x48/img-master/....jpg'
 ```
 
 作品标题
 
 ```
->>> rf['illust_attrs'].illust_title()
+>>> prf['illust_attrs'].illust_title()
 '森倉円初個展「Girl Friend」メインビジュアル'
 ```
 
 作者昵称
 
 ```
->>> rf['illust_attrs'].user_name()
+>>> prf['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
 ```
 
 作品 id
 
 ```
->>> rf['illust_attrs'].illust_id()
+>>> prf['illust_attrs'].illust_id()
 '72810724'
 ```
 
 作品创建日期（未作处理）
 
 ```
->>> rf['illust_attrs'].create_date()
+>>> prf['illust_attrs'].create_date()
 '2019-01-23T15:00:05+00:00'
 ```
 
 作品上传日期（未作处理）
 
 ```
->>> rf['illust_attrs'].upload_date()
+>>> prf['illust_attrs'].upload_date()
 '2019-01-23T15:00:05+00:00'
 ```
 
@@ -141,68 +147,68 @@ r.batch()
 作品链接（这类图应该是除原图外，质量最好的）
 
 ```
->>> rf['illust_attrs'].regular_url()
+>>> prf['illust_attrs'].regular_url()
 'https://i.pximg.net/img-master/....jpg'
 ```
 
 查看作品浏览数
 
 ```
->>> rf['illust_attrs'].view_count()
+>>> prf['illust_attrs'].view_count()
 103514
 ```
 
 查看点赞数
 
 ```
->>> rf['illust_attrs'].like_count()
+>>> prf['illust_attrs'].like_count()
 ...
 ```
 
 查看收藏数
 
 ```
->>> rf['illust_attrs'].mark_count()
+>>> prf['illust_attrs'].mark_count()
 ...
 ```
 
 查看评论数
 
 ```
->>> rf['illust_attrs'].comment_count()
+>>> prf['illust_attrs'].comment_count()
 ...
 ```
 
 查看作品排名
 
 ```
->>> rf['rank']
+>>> prf['rank']
 1
 ```
 
 查看排名日期
 
 ```
->>> rf['rank_date']
+>>> prf['rank_date']
 '20190125'
 ```
 
 查看评论
 
 ```
->>> vcrf = rf['illust_attrs'].view_comments()
->>> vcrf.first()['comment']
+>>> prfvc = prf['illust_attrs'].view_comments()
+>>> prfvc.first()['comment']
 ...
->>> vcrf.first()['userName']
+>>> prfvc.first()['userName']
 ...
->>> vcrf.next()['comment']
+>>> prfvc.next()['comment']
 ...
 ```
 
 查看作品标签信息
 
 ```
->>> tags = rf['illust_attrs'].view_tags()
+>>> tags = prf['illust_attrs'].view_tags()
 >>> tf = tags.first()
 >>> tf
 <image.ImageTag object 0x00..>
@@ -214,7 +220,7 @@ r.batch()
 一种更快的获取所有标签的方法
 
 ```
->>> for tag in rf['illust_attrs'].all()['tags']['tags']:
+>>> for tag in prf['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
 # output some tags
@@ -224,47 +230,40 @@ r.batch()
 查看图像
 
 ```
->>> rf['illust_attrs'].view_regul_image()
+>>> prf['illust_attrs'].view_regul_image()
 ```
 
 喜欢就保存一个（默认保存查看的图像类型）
 
 ```
->>> rf['illust_attrs'].save() # 尺寸为 regular
+>>> prf['illust_attrs'].save() # 尺寸为 regular
 Saved!
 ```
 
 一种直接保存原图的方式
 
 ```
->>> rf['illust_attrs'].save_original()
+>>> prf['illust_attrs'].save_original()
 Saved!
 ```
 
 获取下一个作品
 
 ```
->> rn = r.next()
+>> prn = pr.next()
 ```
 
 用法与前一个一样
 
 ```
->>> rn['illust_attrs'].imsize()
+>>> prn['illust_attrs'].imsize()
 (1500, 1062)
 ```
 
 * 一次加载一条：`one()` 一次加载排行榜前 50 个中的 1 个，并加入到队列中，这样依然能使用 `batch()` 一样的功能。
 
 ```
-"""
-from pixiver.rankiv import Daily
-r = Daily(20190125)
-Pixiver Initializing...
-Initialized!
-"""
-
->>> ro = r.one()
+>>> pro = pr.one()
 ```
 
 用法也一样
@@ -272,27 +271,27 @@ Initialized!
 查看浏览量
 
 ```
->>> ro['illust_attrs'].view_count()
+>>> pro['illust_attrs'].view_count()
 108805
 ```
 
 作者昵称
 
 ```
->>> ro['illust_attrs'].user_name()
+>>> pro['illust_attrs'].user_name()
 '森倉円*初個展2/15-3/6'
 ```
 
 查看标签
 
 ```
->>> t = ro['illust_attrs'].view_tags()
+>>> t = pro['illust_attrs'].view_tags()
 >>> tf = t.first()
 >>> tf.tag_info()
 {'tag': 'オリジナル', 'abstract': '独自に創作したもの。', 'thumbnail': 'https://i.pximg.net/....jpg'}
 >>> tf.view_tag()
 'オリジナル'
->>> for tag in ro['illust_attrs'].all()['tags']['tags']:
+>>> for tag in pro['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
 オリジナル
@@ -307,35 +306,35 @@ Initialized!
 查看点赞数
 
 ```
->>> ro['illust_attrs'].like_count()
+>>> pro['illust_attrs'].like_count()
 14166
 ```
 
 查看收藏数
 
 ```
->>> ro['illust_attrs'].mark_count()
+>>> pro['illust_attrs'].mark_count()
 17145
 ```
 
 查看评论数
 
 ```
->>> ro['illust_attrs'].comment_count()
+>>> pro['illust_attrs'].comment_count()
 64
 ```
 
 查看评论
 
 ```
->>> vcro = ro['illust_attrs'].view_comments()
->>> vcro.first()['comment']
+>>> provc = ro['illust_attrs'].view_comments()
+>>> provc.first()['comment']
 ...
->>> vcro.curr()['comment']
+>>> provc.curr()['comment']
 ...
->>> vcro.next()['comment']
+>>> provc.next()['comment']
 ...
->>> vcro.last()['comment']
+>>> provc.last()['comment']
 ...
 ```
 
@@ -362,163 +361,152 @@ rankiv.FemaleR
 2. User 类可根据 `pixiv` 用户 id 查看相关信息
 
 ```python
-from pixiver.useriv import User
-r = User(6415776)
-```
-
-与排行榜一样，加载后会输出：
-
-```
-Pixiver Initializing...
-Initialized!
+from pixiver.pixiv import Pixiv
+p = Pixiv()
+pu = p.user(6415776)
 ```
 
 查看用户昵称
 
 ```
->>> r.username
+>>> pu.author_name
 'ファルケン@'
 ```
 
 查看关注总量
 
 ```
->>> r.following_total
+>>> pu.following_total
 548
 ```
 
 是否是会员
 
 ```
->>> r.premium
+>>> pu.premium
 True
 ```
 
 社交链接，返回数据类型： json
 
 ```
->>> r.social
+>>> pu.social
 {'twitter': {'url': 'https://twitter.com/YutoZin'}}
 ```
 
 查看其关注用户信息，返回数据类型： json 
 
 ```
->>> r.following_all.first()
+>>> pu.following_all.first()
 {'userId': '490219', 'userName': 'Hiten', 'profileImageUrl': ...}
 ```
 
 查看作品 id
 
 ```
->>> r.illusts.first()
-'72318445'
->>> r.illusts.next()
-'72147871'
-...
+>>> pu.illusts.first()  # 返回 Works 类
+<Works ...>
 ```
 
 3. 根据作品 ID 浏览相关信息
 
 ```
->>> from pixiver import imageiv
->>> pi = imageiv.PixivImage(72773786)
+>>> from pixiver.pixiv import Pixiv
+>>> p = Pixiv()
+>>> pw = p.works(72773786)
 ```
 
 查看评论
 
 ```
->>> coms = pi.view_comments()
->>> coms.first()['comment']
+>>> pwvc = pw.view_comments()
+>>> pwvc.first()['comment']
 'face can be better'
 ```
 
 评论者的昵称
 
 ```
->>> coms.first()['userName']
+>>> pwvc.first()['userName']
 '...'
 ```
 
 下一条评论
 
 ```
->>> coms.next()['comment']
+>>> pwvc.next()['comment']
 ...
 ```
 
 最后一条评论
 
 ```
->>> coms.last()['comment']
+>>> pwvc.last()['comment']
 ...
 ```
 
 原图链接
 
 ```
->>> pi.original_url()
+>>> pw.original_url()
 'https://i.pximg.net/img....jpg'
 ```
 
 喜欢作品的人数
 
 ```
->>> pi.like_count()
+>>> pw.like_count()
 12183
 ```
 
 作者昵称
 
 ```
->>> pi.user_name()
+>>> pw.user_name()
 '河CY'
 ```
 
 作品收藏数
 
 ```
->>> pi.mark_count()
+>>> pw.mark_count()
 14370
 ```
 
 作品评论数
 
 ```
->>> pi.comment_count()
+>>> pw.comment_count()
 64
 ```
 
 4. 其他：
 
-浏览 R-18 排行（暂时不能通过账户及密码登录获取 cookie）
+浏览 R-18 排行（暂时不能通过账户及密码登录以获取正确 cookies）
 
 ```
->>> from pixiver.rankiv import DailyR
->>> dr = DailyR(ymd=20190207, cookie=True)
+>>> from pixiver.pixiv import Pixiv
+>>> p = Pixiv(username='username', password='password')
+>>> pr = p.rank(20190219, typed='daily_r18')
 Pixiver Initializing...
 Initialized!
->>> gt = dr.one()
+>>> pro = pr.one()
 ...
 ```
-
-注：cookie 保存在 `C:/cookie.txt`，需要手动登录页面后获取。
 
 点赞、收藏、关注
 
 ```
->>> from pixiver.rankiv import DailyR
->>> dr = DailyR(ymd=20190207, cookie=True)
-Pixiver Initializing...
-Initialized!
->>> gt = dr.one()
->>> gt['illust_attrs'].like()
+>>> from pixiver.pixiv import Pixiv
+>>> p = Pixiv(cookie=True, path='../cookie')
+>>> pr = p.works(69193024)
+>>> pr.like()
 Liked!
->>> gt['illust_attrs'].mark()
+>>> pr.mark()
 Marked!
->>> gt['illust_attrs'].bookmark()
+>>> pr.bookmark()
 Bookmarked!
->>> gt['illust_attrs'].user_name()
+>>> pr.user_name()
 'おぶい'
 >>>
 ```
@@ -526,10 +514,11 @@ Bookmarked!
 可以下载标签图
 
 ```
->>> from pixiver.imageiv import PixivImage
->>> r = PixivImage(imageid)
->>> r.view_tags().first().save_tag_image()
-...
+>>> from pixiver.pixiv import Pixiv
+>>> p = Pixiv()
+>>> pw = p.works(worksid)
+>>> pw.view_tags().first().save_tag_image()
+>>>
 ```
 
 作品的几种尺寸

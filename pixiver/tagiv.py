@@ -1,42 +1,42 @@
 from requests.compat import unquote_plus
-from pixiver import exceptions
-from pixiver import baseiv
+from pixiver import basiciv
 from PIL import Image
 from io import BytesIO
 
 
-class ImageTag(baseiv.ConfigHeaders):
+class WorksTag(basiciv.BasicConfig):
 
-    def __init__(self, tag):
-        super().__init__()
-        self.url = 'https://www.pixiv.net/ajax/tag/' \
-                   '%s/info' % tag
-        self.im_data = None
+    def __init__(self, tag=None, **kwargs):
+        super(WorksTag, self).__init__(**kwargs)
+        if tag:
+            self.url = 'https://www.pixiv.net/ajax/tag/' \
+                       '%s/info' % tag
+            self.im_data = None
 
-        r = self.sess.get(
-            self.url,
-            headers=self.sess.headers,
-            timeout=5
-        )
-        self.info_json = r.json()
-
-        if self.info_json['error']:
-            raise exceptions.AjaxRequestError(
-                self.info_json['message']
+            r = self.sess.get(
+                self.url,
+                headers=self.sess.headers,
+                timeout=5
             )
+            self.info_json = r.json()
 
-        if self.info_json['body']:
-            self.im_tag_url = self.info_json['body']['thumbnail']
-            self.im_name = self.im_tag_url.split('/')[-1]
-            self.illust_id = self.im_name.split('.')[0] \
-                .replace('_p0_master1200', '') \
-                .replace('_p0', '')
-        else:
-            self.info_json['body'] = {
-                'tag': unquote_plus(tag),
-                'abstract': None,
-                'thumbnail': None
-            }
+            if self.info_json['error']:
+                raise basiciv.exceptions.AjaxRequestError(
+                    self.info_json['message']
+                )
+
+            if self.info_json['body']:
+                self.im_tag_url = self.info_json['body']['thumbnail']
+                self.im_name = self.im_tag_url.split('/')[-1]
+                self.illust_id = self.im_name.split('.')[0] \
+                    .replace('_p0_master1200', '') \
+                    .replace('_p0', '')
+            else:
+                self.info_json['body'] = {
+                    'tag': unquote_plus(tag),
+                    'abstract': None,
+                    'thumbnail': None
+                }
 
     def tag_info(self):
         return self.info_json['body']

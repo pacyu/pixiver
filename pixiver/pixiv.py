@@ -1,80 +1,103 @@
-import re
-from bs4 import BeautifulSoup
-from pixiver.exceptions import PixivError
-from pixiver.baseiv import ConfigHeaders
+from pixiver.useriv import User
+from pixiver.worksiv import Works
+from pixiver.basiciv import Login
+from pixiver import rankiv
 
 
-class Pixiv(ConfigHeaders):
-    init_url = 'https://www.pixiv.net'
-    login_url = 'https://accounts.pixiv.net/login'
-    login_api = 'https://accounts.pixiv.net/api/login'
-    kvpair = {
-        'return_to': init_url,
-        'cookie': False
-    }
+class Pixiv(Login):
 
-    def __init__(self, username=None, password=None, **kwargs):
-        super().__init__()
-        self.username = username
-        self.password = password
-        self.kvpair.update(kwargs)
+    def works(self, illust_id):
+        return Works(illust_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
 
-        if self.kvpair['cookie']:
-            cookie = open('C:/cookie.txt').read()
+    def user(self, user_id):
+        return User(user_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
 
-            self.sess.headers.update({
-                'X-Requested-With': 'XMLHttpRequest',
-                'Cookie': cookie
-            })
-
-        self.token = self.get_token()
-
-        if username and password:
-            self.__login__()
-
-    def __login__(self):
-        requ = self.sess.get(self.login_url, timeout=5)
-        doc = requ.text
-        soup = BeautifulSoup(doc, 'html.parser')
-        csrf_ = soup.input['value']
-        data = {
-            'pixiv_id': self.username,
-            'captcha': '',
-            'g_recaptcha_response': '',
-            'password': self.password,
-            'post_key': csrf_,
-            'source': 'pc',
-            'ref': 'wwwtop_accounts_index',
-            'return_to': self.kvpair['return_to']
-        }
-
-        login = self.sess.post(self.login_api, data=data, timeout=2)
-
-        log_msg = login.json()
-
-        if log_msg['error']:
-            raise PixivError(log_msg['message'])
-
-        if 'validation_errors' not in log_msg['body']:
-            print('Login success!')
-        else:
-            raise PixivError(
-                log_msg['body']['validation_errors']['pixiv_id']
+    def rank(self, date, typed='daily', filters='complex'):
+        if typed == 'weekly':
+            return rankiv.Weekly(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
             )
-
-    def login(self, username, passwrod):
-        self.username = username
-        self.password = passwrod
-        self.__init__(username=username, password=passwrod)
-
-    def get_token(self):
-        r = self.sess.get(
-            'https://www.pixiv.net/ranking.php?mode=daily',
-            timeout=5
-        )
-        reg = re.compile(r'.*pixiv.context.token = "([a-z0-9]{32})"?.*')
-        token = reg.findall(r.text)[0]
-        return token
-
-    def run(self):
-        pass
+        elif typed == 'Monthly':
+            return rankiv.Monthly(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'male':
+            return rankiv.Male(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'female':
+            return rankiv.Female(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'rookie':
+            return rankiv.Rookie(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'original':
+            return rankiv.Original(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'daily_r18':
+            return rankiv.DailyR(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'weekly_r18':
+            return rankiv.WeeklyR(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'male_r18':
+            return rankiv.MaleR(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        elif typed == 'female_r18':
+            return rankiv.FemaleR(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )
+        else:
+            return rankiv.Daily(
+                ymd=date,
+                filters=filters,
+                headers=self.sess.headers,
+                token=self.token,
+                user_id=self.user_id
+            )

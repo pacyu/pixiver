@@ -1,15 +1,14 @@
 from requests.compat import quote_plus
 from PIL import Image
 from io import BytesIO
-from pixiver import exceptions
-from pixiver import baseiv, pixiv
-from pixiver.tagiv import ImageTag
+from pixiver import basiciv
+from pixiver.tagiv import WorksTag
 
 
-class ImageDiscuss(pixiv.Pixiv, baseiv.BaseQueue):
+class Discussion(basiciv.BasicConfig, basiciv.Queue):
 
-    def __init__(self, illust_id, comments_count):
-        super().__init__()
+    def __init__(self, illust_id, comments_count, **kwargs):
+        super(Discussion, self).__init__(**kwargs)
         self.url = 'https://www.pixiv.net/ajax/illusts/comments/roots?' \
                    'illust_id=%s&offset=0&limit=%s' % (
                        illust_id,
@@ -22,7 +21,7 @@ class ImageDiscuss(pixiv.Pixiv, baseiv.BaseQueue):
         self.info_json = r.json()
 
         if self.info_json['error']:
-            raise exceptions.AjaxRequestError(
+            raise basiciv.exceptions.AjaxRequestError(
                 self.info_json['message']
             )
         elif not self.info_json['body']:
@@ -31,7 +30,7 @@ class ImageDiscuss(pixiv.Pixiv, baseiv.BaseQueue):
         self.que_tar = self.info_json['body']['comments']
 
 
-class PixivImage(pixiv.Pixiv):
+class Works(basiciv.BasicConfig):
     base_tags_que = None
     user_comments = None
     im_data = None
@@ -42,21 +41,26 @@ class PixivImage(pixiv.Pixiv):
     im_original = None
     im_name = None
 
-    def __init__(self, illust_id, **kwargs):
-        super().__init__(**kwargs)
-        self.url = 'https://www.pixiv.net/ajax/illust/' \
-                   '%s' % illust_id
-        r = self.sess.get(
-            self.url,
-            timeout=5
-        )
-        info = r.json()
-        if info['error']:
-            raise exceptions.AjaxRequestError(
-                self.info['message']
+    def __init__(self, illust_id=None, **kwargs):
+        super(Works, self).__init__(**kwargs)
+        if illust_id:
+            self.url = 'https://www.pixiv.net/ajax/illust/' \
+                       '%s' % illust_id
+            r = self.sess.get(
+                self.url,
+                headers={
+                    'x-user-id': self.user_id
+                },
+                timeout=5
             )
+            info = r.json()
 
-        self.info = info['body']
+            if info['error']:
+                raise basiciv.exceptions.AjaxRequestError(
+                    info['message']
+                )
+
+            self.info = info['body']
 
     def all(self):
         return self.info
@@ -89,8 +93,8 @@ class PixivImage(pixiv.Pixiv):
     def view_tags(self):
         if self.base_tags_que is None:
             tags_que = self.info['tags']['tags']
-            self.base_tags_que = baseiv.BaseQueue([
-                ImageTag(quote_plus(tag['tag'])) for tag in tags_que])
+            self.base_tags_que = basiciv.Queue([
+                WorksTag(quote_plus(tag['tag'])) for tag in tags_que])
         return self.base_tags_que
 
     def mini_url(self):
@@ -108,10 +112,10 @@ class PixivImage(pixiv.Pixiv):
     def regular_url(self):
         return self.info['urls']['regular']
 
-    def user_name(self):
+    def author_name(self):
         return self.info['userName']
 
-    def user_id(self):
+    def author_id(self):
         return self.info['userId']
 
     def view_count(self):
@@ -119,7 +123,7 @@ class PixivImage(pixiv.Pixiv):
 
     def view_comments(self):
         if not self.user_comments:
-            self.user_comments = ImageDiscuss(
+            self.user_comments = Discussion(
                 self.illust_id(),
                 self.comment_count()
             )
@@ -252,13 +256,9 @@ class PixivImage(pixiv.Pixiv):
 
     def like(self):
         if 'Cookie' not in self.sess.headers:
-            cookie = open('C:/cookie.txt').read()
+            raise basiciv.exceptions.PixivError('You must login before use functional!')
 
-            self.sess.headers.update({
-                'Cookie': cookie,
-            })
-
-        rtmsg = self.sess.post(
+        sepst = self.sess.post(
             'https://www.pixiv.net/ajax/illusts/like',
             json={
                 'illust_id': self.illust_id(),
@@ -267,20 +267,16 @@ class PixivImage(pixiv.Pixiv):
                 'x-csrf-token': self.token
             }
         ).json()
-        if not rtmsg['error']:
+        if not sepst['error']:
             print('Liked!')
         else:
-            raise exceptions.AjaxRequestError(rtmsg['message'])
+            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
 
     def mark(self):
         if 'Cookie' not in self.sess.headers:
-            cookie = open('C:/cookie.txt').read()
+            raise basiciv.exceptions.PixivError('You must login before use functional!')
 
-            self.sess.headers.update({
-                'Cookie': cookie,
-            })
-
-        rtmsg = self.sess.post(
+        sepst = self.sess.post(
             'https://www.pixiv.net/ajax/illusts/bookmarks/add',
             json={
                 'comment': '',
@@ -292,25 +288,21 @@ class PixivImage(pixiv.Pixiv):
                 'x-csrf-token': self.token
             }
         ).json()
-        if not rtmsg['error']:
+        if not sepst['error']:
             print('Marked!')
         else:
-            raise exceptions.AjaxRequestError(rtmsg['message'])
+            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
 
     def bookmark(self):
         if 'Cookie' not in self.sess.headers:
-            cookie = open('C:/cookie.txt').read()
+            raise basiciv.exceptions.PixivError('You must login before use functional!')
 
-            self.sess.headers.update({
-                'Cookie': cookie,
-            })
-
-        rtmsg = self.sess.post(
+        sepst = self.sess.post(
             'https://www.pixiv.net/bookmark_add.php',
             data={
                 'mode': 'add',
                 'type': 'user',
-                'user_id': self.user_id(),
+                'user_id': self.author_id(),
                 'tags': '',
                 'restrict': 0,
                 'format': 'json',
@@ -319,8 +311,8 @@ class PixivImage(pixiv.Pixiv):
                 'x-csrf-token': self.token
             }
         ).json()
-        if not rtmsg:
+        if not sepst:
             print('Bookmarked!')
         else:
             # Maybe have a bug
-            raise exceptions.AjaxRequestError(rtmsg['message'])
+            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
