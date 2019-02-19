@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.8-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.8.0219-blue.svg)](https://pypi.org/project/pixiver/)
 [![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)](https://travis-ci.org/darkchii/pixiver)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -54,9 +54,7 @@ pw.save_original()
 
 下面开始学习如何使用吧！（个人建议使用 python console）
 
-1. 每日排行：
-
-首先导入包并通过给定日期初始化对象
+1. 排行榜
 
 ```python
 from pixiver.pixiv import Pixiv
@@ -73,12 +71,12 @@ Pixiver Initializing...
 Initialized!
 ```
 
-接下来这里我们有两种方式可以浏览排行版：
+接下来这里我们有两种方式可以浏览排行版
 
 * 使用 `batch()` 一次加载排行榜前 50 个图像进行处理。但对于网络不好的使用者来说，这可能会很头痛。不过我还提供了另一种加载方式（见方法2）。
 
 ```
-pr.batch()
+>>> pr.batch()
 ```
 
 获取当前批次第一个作品
@@ -186,13 +184,6 @@ pr.batch()
 1
 ```
 
-查看排名日期
-
-```
->>> prf['rank_date']
-'20190125'
-```
-
 查看评论
 
 ```
@@ -211,7 +202,7 @@ pr.batch()
 >>> tags = prf['illust_attrs'].view_tags()
 >>> tf = tags.first()
 >>> tf
-<image.ImageTag object 0x00..>
+<tagiv.WorksTag object 0x00..>
 >>> tf.view_tag()
 # tag
 ...
@@ -338,7 +329,7 @@ Saved!
 ...
 ```
 
-其他排行用法相同，类名分别为：
+其他排行榜用法相同，类名分别为：
 
 ```
 rankiv.Daily
@@ -358,7 +349,7 @@ rankiv.MaleR
 rankiv.FemaleR
 ```
 
-2. User 类可根据 `pixiv` 用户 id 查看相关信息
+2. 根据 `pixiv` 用户 id 查看相关信息
 
 ```python
 from pixiver.pixiv import Pixiv
@@ -405,7 +396,7 @@ True
 
 ```
 >>> pu.illusts.first()  # 返回 Works 类
-<Works ...>
+<works.Works object 0x00...>
 ```
 
 3. 根据作品 ID 浏览相关信息
