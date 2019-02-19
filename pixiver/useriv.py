@@ -48,15 +48,13 @@ class User(basiciv.BasicConfig):
                 self.illusts = basiciv.Queue([
                     Works(illust_id=illust_id) for illust_id in list(
                         self.profile_json['body']['illusts'].keys()
-                    )
-                ])
+                    )])
 
             if 'manga' in self.profile_json['body']:
                 self.mangas = basiciv.Queue([
                     Works(illust_id=illust_id) for illust_id in list(
                         self.profile_json['body']['manga'].keys()
-                    )
-                ])
+                    )])
 
             self.sess.headers['Referer'] = \
                 'https://www.pixiv.net/bookmark.php?' \

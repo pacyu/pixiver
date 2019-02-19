@@ -3,6 +3,7 @@ from PIL import Image
 from io import BytesIO
 from pixiver import basiciv
 from pixiver.tagiv import WorksTag
+from pixiver.useriv import User
 
 
 class Discussion(basiciv.BasicConfig, basiciv.Queue):
@@ -316,3 +317,6 @@ class Works(basiciv.BasicConfig):
         else:
             # Maybe have a bug
             raise basiciv.exceptions.AjaxRequestError(sepst['message'])
+
+    def author(self):
+        return User(self.author_id())
