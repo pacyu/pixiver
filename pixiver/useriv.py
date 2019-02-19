@@ -1,5 +1,5 @@
-from pixiver import basiciv
-from pixiver.worksiv import Works
+from . import basiciv
+from . import worksiv
 
 
 class User(basiciv.BasicConfig):
@@ -46,13 +46,13 @@ class User(basiciv.BasicConfig):
 
             if 'illusts' in self.profile_json['body']:
                 self.illusts = basiciv.Queue([
-                    Works(illust_id=illust_id) for illust_id in list(
+                    worksiv.Works(illust_id=illust_id) for illust_id in list(
                         self.profile_json['body']['illusts'].keys()
                     )])
 
             if 'manga' in self.profile_json['body']:
                 self.mangas = basiciv.Queue([
-                    Works(illust_id=illust_id) for illust_id in list(
+                    worksiv.Works(illust_id=illust_id) for illust_id in list(
                         self.profile_json['body']['manga'].keys()
                     )])
 

@@ -1,16 +1,16 @@
-from pixiver.useriv import User
-from pixiver.worksiv import Works
-from pixiver.basiciv import Login
-from pixiver import rankiv
+from . import basiciv
+from . import useriv
+from . import worksiv
+from . import rankiv
 
 
-class Pixiv(Login):
+class Pixiv(basiciv.Login):
 
     def works(self, illust_id):
-        return Works(illust_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
+        return worksiv.Works(illust_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
 
     def user(self, user_id):
-        return User(user_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
+        return useriv.User(user_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
 
     def rank(self, date, typed='daily', filters='complex'):
         if typed == 'weekly':

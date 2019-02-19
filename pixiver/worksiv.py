@@ -1,9 +1,9 @@
 from requests.compat import quote_plus
 from PIL import Image
 from io import BytesIO
-from pixiver import basiciv
-from pixiver.tagiv import WorksTag
-from pixiver.useriv import User
+from . import basiciv
+from . import tagiv
+from . import useriv
 
 
 class Discussion(basiciv.BasicConfig, basiciv.Queue):
@@ -95,7 +95,7 @@ class Works(basiciv.BasicConfig):
         if self.base_tags_que is None:
             tags_que = self.info['tags']['tags']
             self.base_tags_que = basiciv.Queue([
-                WorksTag(quote_plus(tag['tag'])) for tag in tags_que])
+                tagiv.WorksTag(quote_plus(tag['tag'])) for tag in tags_que])
         return self.base_tags_que
 
     def mini_url(self):
@@ -319,4 +319,4 @@ class Works(basiciv.BasicConfig):
             raise basiciv.exceptions.AjaxRequestError(sepst['message'])
 
     def author(self):
-        return User(self.author_id())
+        return useriv.User(self.author_id())

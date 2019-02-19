@@ -1,7 +1,7 @@
 import re
-from pixiver import basiciv
-from pixiver.helper import check_date
-from pixiver.worksiv import Works
+from . import basiciv
+from .helper import check_date
+from . import worksiv
 
 
 class Batch(basiciv.Queue):
@@ -119,7 +119,7 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
     def one(self):
         if self.one_count < 50:
             curr_one = {
-                'illust_attrs': Works(
+                'illust_attrs': worksiv.Works(
                     self.rjson['contents'][self.one_count]['illust_id']
                 ),
                 'rank': self.rjson['contents'][self.one_count]['rank'],
@@ -139,7 +139,7 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
 
                 take = self.rjson['contents'][self.one_count]
 
-                list1.append(Works(take['illust_id']))
+                list1.append(worksiv.Works(take['illust_id']))
                 list2.append(take['rank'])
                 list3.append(take['yes_rank'])
 
