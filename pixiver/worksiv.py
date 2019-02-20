@@ -271,7 +271,7 @@ class Works(basiciv.BasicConfig):
         if not sepst['error']:
             print('Liked!')
         else:
-            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
+            raise basiciv.exceptions.AutheVerifyError(sepst['message'])
 
     def mark(self):
         if 'Cookie' not in self.sess.headers:
@@ -292,7 +292,7 @@ class Works(basiciv.BasicConfig):
         if not sepst['error']:
             print('Marked!')
         else:
-            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
+            raise basiciv.exceptions.AutheVerifyError(sepst['message'])
 
     def bookmark(self):
         if 'Cookie' not in self.sess.headers:
@@ -315,8 +315,7 @@ class Works(basiciv.BasicConfig):
         if not sepst:
             print('Bookmarked!')
         else:
-            # Maybe have a bug
-            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
+            raise basiciv.exceptions.AutheVerifyError(sepst['message'])
 
     def author(self):
         return useriv.User(self.author_id())

@@ -104,4 +104,4 @@ class User(basiciv.BasicConfig):
         if not sepst:
             print('Bookmarked!')
         else:
-            raise basiciv.exceptions.AjaxRequestError(sepst['message'])
+            raise basiciv.exceptions.AutheVerifyError(sepst['message'])

@@ -8,3 +8,7 @@ class DateError(PixivError):
 
 class AjaxRequestError(PixivError):
     """ Some unexpected errors may occur. """
+
+
+class AutheVerifyError(PixivError):
+    """ Cookie or token verification error. """

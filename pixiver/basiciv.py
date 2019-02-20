@@ -1,7 +1,7 @@
 import re
 import time
 from requests import Session
-from pixiver import exceptions
+from . import exceptions
 from http.cookies import BaseCookie
 
 
@@ -48,12 +48,13 @@ class Login(BasicConfig):
             self.cookies.load(open(self.kvpair['path']).read())
             php_sess_id = str(self.cookies['PHPSESSID']).replace('Set-Cookie: ', '').replace('PHPSESSID=', '')
             self.user_id = php_sess_id.split('_')[0]
-            self.pixiv = self.get_pixiv()
-            self.token = self.pixiv['token']
 
             self.sess.headers.update({
                 'Cookie': str(self.cookies).replace('Set-Cookie: ', '').replace('\r\n', '; ')
             })
+
+            self.pixiv = self.get_pixiv()
+            self.token = self.pixiv['token']
 
         elif username and password:
             self.username = username
@@ -173,21 +174,22 @@ class Queue(object):
         return self.que_tar[self.step_number]
 
     def prev(self):
-        if self.step_number > 0:
-            self.step_number -= 1
-            return self.que_tar[self.step_number]
-        else:
-            print('Top!')
+        if self.step_number < 0:
+            raise Exception('Lower limit.')
+        self.step_number -= 1
+        return self.que_tar[self.step_number]
 
     def next(self):
-        if self.step_number < len(self.que_tar) - 1:
-            self.step_number += 1
-            return self.que_tar[self.step_number]
-        else:
-            print('End!')
+        if self.step_number > len(self.que_tar) - 1:
+            raise Exception('Upper limit.')
+        self.step_number += 1
+        return self.que_tar[self.step_number]
 
     def last(self):
         return self.que_tar[len(self.que_tar) - 1]
 
     def size(self):
         return len(self.que_tar)
+
+    def remove(self):
+        self.que_tar.pop(self.step_number)

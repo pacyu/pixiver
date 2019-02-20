@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.8.0219-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.8.0220-blue.svg)](https://pypi.org/project/pixiver/)
 [![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)](https://travis-ci.org/darkchii/pixiver)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -89,7 +89,7 @@ Initialized!
 
 ```
 >>> prf['illust_attrs'].imsize()
-(1228, 1736)
+(height, width)
 ```
 
 查看作品原图链接
@@ -124,21 +124,21 @@ Initialized!
 
 ```
 >>> prf['illust_attrs'].illust_id()
-'72810724'
+'id'
 ```
 
 作品创建日期（未作处理）
 
 ```
 >>> prf['illust_attrs'].create_date()
-'2019-01-23T15:00:05+00:00'
+'...T15:00:05+00:00'
 ```
 
 作品上传日期（未作处理）
 
 ```
 >>> prf['illust_attrs'].upload_date()
-'2019-01-23T15:00:05+00:00'
+'...T15:00:05+00:00'
 ```
 
 
@@ -146,14 +146,14 @@ Initialized!
 
 ```
 >>> prf['illust_attrs'].regular_url()
-'https://i.pximg.net/img-master/....jpg'
+'...'
 ```
 
 查看作品浏览数
 
 ```
 >>> prf['illust_attrs'].view_count()
-103514
+...
 ```
 
 查看点赞数
@@ -181,7 +181,7 @@ Initialized!
 
 ```
 >>> prf['rank']
-1
+...
 ```
 
 查看评论
@@ -248,7 +248,7 @@ Saved!
 
 ```
 >>> prn['illust_attrs'].imsize()
-(1500, 1062)
+(height, width)
 ```
 
 * 一次加载一条：`one()` 一次加载排行榜前 50 个中的 1 个，并加入到队列中，这样依然能使用 `batch()` 一样的功能。
@@ -263,14 +263,14 @@ Saved!
 
 ```
 >>> pro['illust_attrs'].view_count()
-108805
+...
 ```
 
 作者昵称
 
 ```
 >>> pro['illust_attrs'].user_name()
-'森倉円*初個展2/15-3/6'
+'...'
 ```
 
 查看标签
@@ -279,40 +279,33 @@ Saved!
 >>> t = pro['illust_attrs'].view_tags()
 >>> tf = t.first()
 >>> tf.tag_info()
-{'tag': 'オリジナル', 'abstract': '独自に創作したもの。', 'thumbnail': 'https://i.pximg.net/....jpg'}
+{'tag': '...', 'abstract': '...', 'thumbnail': '...'}
 >>> tf.view_tag()
-'オリジナル'
+'...'
 >>> for tag in pro['illust_attrs'].all()['tags']['tags']:
 ...     print(tag['tag'])
 ...
-オリジナル
-女の子
-桜
-なにこれ可愛い
-桜の花
-美少女
-ロングヘアー
 ```
 
 查看点赞数
 
 ```
 >>> pro['illust_attrs'].like_count()
-14166
+...
 ```
 
 查看收藏数
 
 ```
 >>> pro['illust_attrs'].mark_count()
-17145
+...
 ```
 
 查看评论数
 
 ```
 >>> pro['illust_attrs'].comment_count()
-64
+...
 ```
 
 查看评论
@@ -382,21 +375,21 @@ True
 
 ```
 >>> pu.social
-{'twitter': {'url': 'https://twitter.com/YutoZin'}}
+{'twitter': {'url': '...'}}
 ```
 
 查看其关注用户信息，返回数据类型： json 
 
 ```
 >>> pu.following_all.first()
-{'userId': '490219', 'userName': 'Hiten', 'profileImageUrl': ...}
+{'userId': '...', 'userName': '...', 'profileImageUrl': ...}
 ```
 
 查看作品 id
 
 ```
 >>> pu.illusts.first()  # 返回 Works 类
-<works.Works object 0x00...>
+<worksiv.Works object 0x00...>
 ```
 
 3. 根据作品 ID 浏览相关信息
@@ -404,7 +397,7 @@ True
 ```
 >>> from pixiver.pixiv import Pixiv
 >>> p = Pixiv()
->>> pw = p.works(72773786)
+>>> pw = p.works(imgid)
 ```
 
 查看评论
@@ -412,14 +405,14 @@ True
 ```
 >>> pwvc = pw.view_comments()
 >>> pwvc.first()['comment']
-'face can be better'
+...
 ```
 
 评论者的昵称
 
 ```
 >>> pwvc.first()['userName']
-'...'
+...
 ```
 
 下一条评论
@@ -440,35 +433,35 @@ True
 
 ```
 >>> pw.original_url()
-'https://i.pximg.net/img....jpg'
+...
 ```
 
 喜欢作品的人数
 
 ```
 >>> pw.like_count()
-12183
+...
 ```
 
 作者昵称
 
 ```
 >>> pw.user_name()
-'河CY'
+'...'
 ```
 
 作品收藏数
 
 ```
 >>> pw.mark_count()
-14370
+...
 ```
 
 作品评论数
 
 ```
 >>> pw.comment_count()
-64
+...
 ```
 
 4. 其他：
@@ -498,7 +491,7 @@ Marked!
 >>> pr.bookmark()
 Bookmarked!
 >>> pr.user_name()
-'おぶい'
+'...'
 >>>
 ```
 
