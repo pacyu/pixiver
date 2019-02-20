@@ -354,21 +354,21 @@ pu = p.user(6415776)
 
 ```
 >>> pu.author_name
-'ファルケン@'
+'...'
 ```
 
 查看关注总量
 
 ```
 >>> pu.following_total
-548
+...
 ```
 
 是否是会员
 
 ```
 >>> pu.premium
-True
+...
 ```
 
 社交链接，返回数据类型： json
