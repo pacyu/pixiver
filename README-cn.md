@@ -1,7 +1,7 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.8.0220-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.8.02201-blue.svg)](https://pypi.org/project/pixiver/)
 [![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)](https://travis-ci.org/darkchii/pixiver)
 
 这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
@@ -96,28 +96,28 @@ Initialized!
 
 ```
 >>> prf['illust_attrs'].original_url()
-'https://i.pximg.net/img-original/....jpg'
+'...'
 ```
 
 查看作品迷你图链接
 
 ```
 >>> prf['illust_attrs'].mini_url()
-'https://i.pximg.net/c/48x48/img-master/....jpg'
+'...'
 ```
 
 作品标题
 
 ```
 >>> prf['illust_attrs'].illust_title()
-'森倉円初個展「Girl Friend」メインビジュアル'
+'...'
 ```
 
 作者昵称
 
 ```
 >>> prf['illust_attrs'].user_name()
-'森倉円*初個展2/15-3/6'
+'...'
 ```
 
 作品 id
