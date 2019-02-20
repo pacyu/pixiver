@@ -116,7 +116,7 @@ Initialized!
 作者昵称
 
 ```
->>> prf['illust_attrs'].user_name()
+>>> prf['illust_attrs'].author_name()
 '...'
 ```
 
@@ -269,7 +269,7 @@ Saved!
 作者昵称
 
 ```
->>> pro['illust_attrs'].user_name()
+>>> pro['illust_attrs'].author_name()
 '...'
 ```
 
@@ -446,7 +446,7 @@ pu = p.user(6415776)
 作者昵称
 
 ```
->>> pw.user_name()
+>>> pw.author_name()
 '...'
 ```
 
@@ -490,7 +490,7 @@ Liked!
 Marked!
 >>> pr.bookmark()
 Bookmarked!
->>> pr.user_name()
+>>> pr.author_name()
 '...'
 >>>
 ```
