@@ -61,7 +61,7 @@ from pixiver.pixiv import Pixiv
 
 p = Pixiv(username='username', password='password')
 # or Pixiv(cookie=True, path='../cookie')
-pr = p.rank(201902019)
+pr = p.rank(20190219)
 ```
 
 对于正确合法的日期，加载成功后将会显示：
