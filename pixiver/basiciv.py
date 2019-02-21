@@ -121,8 +121,8 @@ class Login(BasicConfig):
             cookie = r.cookies
 
             reg = re.compile(r'.*pixiv.user.premium = ([a-zA-Z]{4,5})')
-            is_pre = bool(reg.findall(r.text)[0])
-            if is_pre:
+            is_pre = reg.findall(r.text)[0]
+            if is_pre == 'true':
                 plan = 'premium'
             else:
                 plan = 'normal'
