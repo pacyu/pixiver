@@ -89,7 +89,7 @@ class Login(BasicConfig):
                 raise exceptions.PixivError(log_msg['message'])
 
             if 'validation_errors' not in log_msg['body']:
-                print('Login success!')
+                print('Login successful!')
             else:
                 raise exceptions.PixivError(
                     log_msg['body']['validation_errors']['pixiv_id']
@@ -110,6 +110,7 @@ class Login(BasicConfig):
             self.cookies['__utmv'] = utmc + '.|2=login%20ever=no=1^9=p_ab_id=2=1^10=p_ab_id_2=3=1^11=lang=zh=1'
             self.cookies['__utma'] = utmc + '.' + '864160484.' + tis + '.' + tis + '.' + ts[:12]
             self.cookies['__utmb'] = utmc + '.1.10.' + ts[:12]
+            self.cookies['__utmt'] = '1'
             self.cookies['login_bc'] = '1'
             self.cookies['_ga'] = 'GA1.2.1285249302.' + ts[:12]
             self.cookies['_gid'] = 'GA1.2.1090652169.' + ts[:12]
