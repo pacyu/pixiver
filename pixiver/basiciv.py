@@ -139,6 +139,10 @@ class Login(BasicConfig):
                                           + '=1^6=user_id=' \
                                           + self.user_id \
                                           + '=1^9=p_ab_id=9=1^10=p_ab_id_2=0=1^11=lang=zh=1'
+            self.cookies['__utmz'] = '235335808.' + tis\
+                                     + '.2.2.utmcsr=accounts.pixiv.net|utmccn=(referral)|utmcmd=referral|utmcct=/login'
+            self.cookies['_gat_UA-1830249-138'] = '1'
+            self.cookies['ki_r'] = ''
 
             self.sess.headers.update({
                 'Cookie': str(self.cookies).replace('Set-Cookie: ', '').replace('\r\n', '; ')

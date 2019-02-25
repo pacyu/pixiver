@@ -5,6 +5,8 @@ from . import rankiv
 
 
 class Pixiv(basiciv.Login):
+    kind = ('daily', 'weekly', 'monthly', 'male', 'female', 'rookie', 'original',
+            'daily_r18', 'weekly_r18', 'male_r18', 'female_r18')
 
     def works(self, illust_id):
         return worksiv.Works(illust_id, headers=self.sess.headers, token=self.token, user_id=self.user_id)
@@ -21,7 +23,7 @@ class Pixiv(basiciv.Login):
                 token=self.token,
                 user_id=self.user_id
             )
-        elif typed == 'Monthly':
+        elif typed == 'monthly':
             return rankiv.Monthly(
                 ymd=date,
                 filters=filters,
