@@ -91,15 +91,17 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
         r = self.sess.get(
             self.rank_url,
             params=params,
-            timeout=5
+            timeout=self.kvpair['timeout']
         )
 
-        self.rjson = r.json()
+        print(r.text)
+
+        self.interface = r.json()
 
         if self.rank_total == 0:
-            self.rank_total = self.rjson['rank_total']
-        self.current_page = self.rjson['page']
-        self.current_date = self.rjson['date']
+            self.rank_total = self.interface['rank_total']
+        self.current_page = self.interface['page']
+        self.current_date = self.interface['date']
 
         print(self.init_finished)
 
@@ -120,10 +122,10 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
         if self.one_count < 50:
             curr_one = {
                 'illust_attrs': worksiv.Works(
-                    self.rjson['contents'][self.one_count]['illust_id']
+                    self.interface['contents'][self.one_count]['illust_id']
                 ),
-                'rank': self.rjson['contents'][self.one_count]['rank'],
-                'yes_rank': self.rjson['contents'][self.one_count]['yes_rank']
+                'rank': self.interface['contents'][self.one_count]['rank'],
+                'yes_rank': self.interface['contents'][self.one_count]['yes_rank']
             }
             self.one_count += 1
             self.que_tar.append(curr_one)
@@ -131,19 +133,29 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
         else:
             return self.next_page().one()
 
-    def batch(self):
-
+    def batch(self, nums=-1):
         if self.one_count < 50:
             list1, list2, list3 = [], [], []
-            while self.one_count < 50:
+            if nums == -1:
+                while self.one_count < 50:
+                    take = self.interface['contents'][self.one_count]
 
-                take = self.rjson['contents'][self.one_count]
+                    list1.append(worksiv.Works(take['illust_id']))
+                    list2.append(take['rank'])
+                    list3.append(take['yes_rank'])
 
-                list1.append(worksiv.Works(take['illust_id']))
-                list2.append(take['rank'])
-                list3.append(take['yes_rank'])
+                    self.one_count += 1
+            else:
+                for _ in range(nums):
+                    if self.one_count == 50:
+                        break
+                    take = self.interface['contents'][self.one_count]
 
-                self.one_count += 1
+                    list1.append(worksiv.Works(take['illust_id']))
+                    list2.append(take['rank'])
+                    list3.append(take['yes_rank'])
+
+                    self.one_count += 1
 
             curr_batch = Batch(
                 illust_attrs=list1,
@@ -153,43 +165,43 @@ class Daily(basiciv.BasicConfig, basiciv.LoadInfo, basiciv.Queue):
             self.que_tar += curr_batch.que_tar
             return self.curr()
         else:
-            return self.next_page().batch()
+            return self.next_page().batch(nums)
 
     def prev_date(self):
-        if self.rjson['prev_date']:
+        if self.interface['prev_date']:
             self.rank_total = 0
             self.step_number = 0
             self.one_count = 0
             self.que_tar.clear()
             self.params = {
-                'date': self.rjson['prev_date']
+                'date': self.interface['prev_date']
             }
             return self.run()
 
     def next_date(self):
-        if self.rjson['next_date']:
+        if self.interface['next_date']:
             self.rank_total = 0
             self.step_number = 0
             self.one_count = 0
             self.que_tar.clear()
             self.params.update({
-                'date': self.rjson['next_date']
+                'date': self.interface['next_date']
             })
             return self.run()
 
     def prev_page(self):
-        if self.rjson['prev']:
+        if self.interface['prev']:
             self.one_count = 0
             self.params.update({
-                'p': self.rjson['prev']
+                'p': self.interface['prev']
             })
             return self.run()
 
     def next_page(self):
-        if self.rjson['next']:
+        if self.interface['next']:
             self.one_count = 0
             self.params.update({
-                'p': self.rjson['next']
+                'p': self.interface['next']
             })
             return self.run()
 

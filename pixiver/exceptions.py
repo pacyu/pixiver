@@ -1,5 +1,5 @@
 class PixivError(Exception):
-    """ Base pixiv exception. """
+    """ Basic pixiv exception. """
 
 
 class DateError(PixivError):
@@ -12,3 +12,6 @@ class AjaxRequestError(PixivError):
 
 class AutheVerifyError(PixivError):
     """ Cookie or token verification error. """
+
+class IOError(PixivError):
+    """ IO write/read Exception. """

@@ -20,40 +20,40 @@ class User(basiciv.BasicConfig):
                 'id=%s' % author_id
 
             person_req = self.sess.get(
-                person, headers=self.sess.headers, timeout=5
+                person, headers=self.sess.headers, timeout=self.kvpair['timeout']
             )
-            self.person_json = person_req.json()
+            self.person_interface = person_req.json()
 
-            if self.person_json['error']:
+            if self.person_interface['error']:
                 raise basiciv.exceptions.AjaxRequestError(
-                    self.person_json['message']
+                    self.person_interface['message']
                 )
 
-            self.author_name = self.person_json['body']['name']
-            self.following_total = self.person_json['body']['following']
-            self.social = self.person_json['body']['social']
-            self.premium = self.person_json['body']['premium']
+            self.author_name = self.person_interface['body']['name']
+            self.following_total = self.person_interface['body']['following']
+            self.social = self.person_interface['body']['social']
+            self.premium = self.person_interface['body']['premium']
 
             profile_request = self.sess.get(
-                profile, headers=self.sess.headers, timeout=5
+                profile, headers=self.sess.headers, timeout=self.kvpair['timeout']
             )
-            self.profile_json = profile_request.json()
+            self.profile_interface = profile_request.json()
 
-            if self.profile_json['error']:
+            if self.profile_interface['error']:
                 raise basiciv.exceptions.AjaxRequestError(
-                    self.profile_json['message']
+                    self.profile_interface['message']
                 )
 
-            if 'illusts' in self.profile_json['body']:
+            if 'illusts' in self.profile_interface['body']:
                 self.illusts = basiciv.Queue([
                     worksiv.Works(illust_id=illust_id) for illust_id in list(
-                        self.profile_json['body']['illusts'].keys()
+                        self.profile_interface['body']['illusts'].keys()
                     )])
 
-            if 'manga' in self.profile_json['body']:
+            if 'manga' in self.profile_interface['body']:
                 self.mangas = basiciv.Queue([
                     worksiv.Works(illust_id=illust_id) for illust_id in list(
-                        self.profile_json['body']['manga'].keys()
+                        self.profile_interface['body']['manga'].keys()
                     )])
 
             self.sess.headers['Referer'] = \
@@ -67,27 +67,30 @@ class User(basiciv.BasicConfig):
                                 self.author_id, offset)
 
                 follow_request = self.sess.get(
-                    following, headers=self.sess.headers, timeout=5
+                    following, headers=self.sess.headers, timeout=self.kvpair['timeout']
                 )
-                follow_json = follow_request.json()
+                follow_interface = follow_request.json()
 
-                if follow_json['error']:
+                if follow_interface['error']:
                     raise basiciv.exceptions.AjaxRequestError(
-                        follow_json['message']
+                        follow_interface['message']
                     )
 
-                for users_iter in follow_json['body']['users']:
+                for users_iter in follow_interface['body']['users']:
                     self.following_all.que_tar.append(users_iter)
                 offset += 20
+
+    def details(self):
+        return self.person_interface['body']
 
     def run(self, author_id=None):
         self.__init__(author_id)
 
     def bookmark(self):
         if 'Cookie' not in self.sess.headers:
-            raise basiciv.exceptions.PixivError('You must login before use functional!')
+            raise basiciv.exceptions.PixivError('You must be logged in before using this feature!')
 
-        sepst = self.sess.post(
+        interface = self.sess.post(
             'https://www.pixiv.net/bookmark_add.php',
             data={
                 'mode': 'add',
@@ -101,7 +104,7 @@ class User(basiciv.BasicConfig):
                 'x-csrf-token': self.token
             }
         ).json()
-        if not sepst:
-            print('Bookmarked!')
+        if not interface['error']:
+            return True
         else:
-            raise basiciv.exceptions.AutheVerifyError(sepst['message'])
+            raise basiciv.exceptions.AutheVerifyError(interface['message'])

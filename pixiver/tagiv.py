@@ -10,7 +10,7 @@ class WorksTag(basiciv.BasicConfig):
         super(WorksTag, self).__init__(**kwargs)
         if tag:
             self.url = 'https://www.pixiv.net/ajax/tag/' \
-                       '%s/info' % tag
+                       '%s/interface' % tag
             self.im_data = None
 
             r = self.sess.get(
@@ -18,34 +18,34 @@ class WorksTag(basiciv.BasicConfig):
                 headers=self.sess.headers,
                 timeout=5
             )
-            self.info_json = r.json()
+            self.interface = r.json()
 
-            if self.info_json['error']:
+            if self.interface['error']:
                 raise basiciv.exceptions.AjaxRequestError(
-                    self.info_json['message']
+                    self.interface['message']
                 )
 
-            if self.info_json['body']:
-                self.im_tag_url = self.info_json['body']['thumbnail']
+            if self.interface['body']:
+                self.im_tag_url = self.interface['body']['thumbnail']
                 self.im_name = self.im_tag_url.split('/')[-1]
                 self.illust_id = self.im_name.split('.')[0] \
                     .replace('_p0_master1200', '') \
                     .replace('_p0', '')
             else:
-                self.info_json['body'] = {
+                self.interface['body'] = {
                     'tag': unquote_plus(tag),
                     'abstract': None,
                     'thumbnail': None
                 }
 
-    def tag_info(self):
-        return self.info_json['body']
+    def details(self):
+        return self.interface['body']
 
     def view_tag(self):
-        return self.info_json['body']['tag']
+        return self.interface['body']['tag']
 
     def view_abstract(self):
-        return self.info_json['body']['abstract']
+        return self.interface['body']['abstract']
 
     def view_thumbnail_image(self):
         if not self.im_data:
@@ -77,4 +77,4 @@ class WorksTag(basiciv.BasicConfig):
 
         with open(self.im_name, 'wb') as f:
             f.write(self.im_data)
-        print('Saved!')
+        return False

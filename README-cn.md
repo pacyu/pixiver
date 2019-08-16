@@ -1,10 +1,10 @@
 pixiver
 =======
 
-[![logo2](https://img.shields.io/badge/pypi-0.0.8.02251-blue.svg)](https://pypi.org/project/pixiver/)
+[![logo2](https://img.shields.io/badge/pypi-0.0.8.8161-blue.svg)](https://pypi.org/project/pixiver/)
 [![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)](https://travis-ci.org/darkchii/pixiver)
 
-这是一个通过 pixiv ajax API 接口访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
+这是一个通过 pixiv ajax API 访问[ [pixiv] ](https://www.pixiv.net/)资源的 python 包。
 
 安装
 ----
@@ -30,13 +30,15 @@ pw.save_original()
 
 目前 `pixiver` 支持以下功能：
 
-注意: 删除线表示 pixiv 没有提供这类服务或 api。
+注意: 删除线表示 pixiv 没有提供这类服务或 api
+
+（另外，目前 pixiv 登录加了人机验证，所以无法登录，但可以使用 cookies 完成需要登录才能使用的功能。 -- 2019.08.16）
 
  + 可浏览 pixiv 每日、每周、每月、新人、原创、受男性欢迎、受女性欢迎排行榜作品。（不需要登录）
 
  + 可浏览 每日 + R-18、每周 + R-18、受男性欢迎 + R-18、受女性欢迎 + R-18 排行榜与其它 R-18 相关内容。（需要登录）
 
- + 可根据作品 id 查看作品相关信息。（不需要登录）
+ + 可根据作品 id 查看作品相关信息（包括多图）。（不需要登录）
 
  + 可浏览作品下的所有评论。（不需要登录）
 
@@ -73,10 +75,10 @@ Initialized!
 
 接下来这里我们有两种方式可以浏览排行版
 
-* 使用 `batch()` 一次加载排行榜前 50 个图像进行处理。但对于网络不好的使用者来说，这可能会很头痛。不过我还提供了另一种加载方式（见方法2）。
+* 使用 `batch()` 一次加载排行榜前 50 个 中的 n (n <= 50) 个图像进行处理。如果只加载一个建议使用 `one()`方法（见方法2）。
 
 ```
->>> pr.batch()
+>>> pr.batch(nums=3) # nums=-1 是默认值，当 nums 指定为 -1 时默认加载50个
 ```
 
 获取当前批次第一个作品
@@ -251,7 +253,7 @@ Saved!
 (height, width)
 ```
 
-* 一次加载一条：`one()` 一次加载排行榜前 50 个中的 1 个，并加入到队列中，这样依然能使用 `batch()` 一样的功能。
+* 一次加载一条：`one()` 一次加载排行榜前 50 个中的 1 个，并加入到队列中，这样依然能继续使用 `batch()` 功能。
 
 ```
 >>> pro = pr.one()
