@@ -7,10 +7,16 @@
 run.py
 
 # images
-*.jpe?g
+*.jpg
+*.bmp
+*.gif
+*.jpeg
 *.png
-*/*.jpe?g
+*/*.jpg
+*/*.bmp
+*/*.jpeg
 */*.png
+*/*.gif
 
 # some cache
 __pycache__/
