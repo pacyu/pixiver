@@ -9,6 +9,8 @@ run.py
 # images
 *.jpe?g
 *.png
+*/*.jpe?g
+*/*.png
 
 # some cache
 __pycache__/
