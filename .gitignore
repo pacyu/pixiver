@@ -20,4 +20,7 @@ build/
 dist/
 
 # cookie file
-cookie.txt
+cookies
+
+# user account
+pixiv_user.json
