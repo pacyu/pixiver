@@ -2,9 +2,9 @@ pixiver
 =======
 
 [![logo2](https://img.shields.io/badge/pypi-0.0.8.8161-blue.svg)](https://pypi.org/project/pixiver/)
-[![build](https://travis-ci.org/darkchii/pixiver.svg?branch=master)](https://travis-ci.org/darkchii/pixiver)
+[![build](https://travis-ci.org/yomikochan/pixiver.svg?branch=master)](https://travis-ci.org/yomikochan/pixiver)
 
-This is a python package for get illustration on the pixiv by ajax interfaces.
+This is a python package for getting illustration with pixiv ajax interfaces.
 
 Move to [Chinese Version](README-cn.md).
 

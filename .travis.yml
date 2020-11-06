@@ -1,10 +1,9 @@
 language: python
 python:
-  - "3.3"
-  - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7-dev"  # 3.7 development branch
+  - "3.7"
+  - "3.8"
 
 script:
   - python setup.py test
@@ -12,11 +11,11 @@ install: pip install -r requirements.txt
 deploy:
   provider: pypi
   skip_existing: true
-  user: darkchii
+  user: yomikochan
   password:
     secure: NjZb9faNpi9SKbiQfJ1T+IIdko+FTQ+AvmBpCQ/x3YqpTwdqzaUX9XuNrwLUbnxvySPABH1TlwXCp2789wjzFnUnKgbf43NMki5QWhD1h77kmbA0wBoK5emr36YhX/yHDvizLgEi+novCLODpZp0FgFwS8UC7vpby5J0df6pkG5KwojLTk4SvCxDULrYxYGHIoo1yhX7sBINpBVlcpOw3VJdKO+9tSGgptwCxdIU/eEdpv4ibJGQhxmoQkbtEXZKoW3Mxjn31G1LVLlVB7ry5b/SZC5yYPI1B2vfYDbkvmmiM2ltnzx2w60aDsKiA+BHRJGuC6SqFbibf1OEEeL+NWBpDJSXqtRWBByo3WApgF6t6TxtkyCkjWJm7LmuAKyhkw5b1WdeAgHnGBZbpz79a9YnlnxmexZt6BFvjpJMUDXhCM3WXEY8xe2sw9jBfC7fClT0s3ii5TnhxkjCnQkF8d4Zz6qoa9E1jeLFkFhw2dFEjgDIPCJDkXEhqHdTY27k9CUjPtc0O2s8lytNmMctkF6ag5+G7N9O1P1eWZGTQzSKVIa0/IGAWqGx9WZxYo594p1diza+YHyH1z+5QnDapxIBjr9Z2IY5Db6MJqDmFUlDs0czOxIjQXMf9U99pjlANod5oQb156k1KI14oO+H4+bdzSAj88Ltm6BRPQ73nZ4=
   on:
     tags: true
     distributions: sdist bdist_wheel
-    repo: darkchii/pixiver
+    repo: yomikochan/pixiver
     python: "3.6"
