@@ -1,0 +1,34 @@
+# IDE Files
+.idea/
+
+# Pycharm stuff
+.idea/*
+
+run.py
+
+# images
+*.jpg
+*.bmp
+*.gif
+*.jpeg
+*.png
+*/*.jpg
+*/*.bmp
+*/*.jpeg
+*/*.png
+*/*.gif
+
+# some cache
+__pycache__/
+
+*.egg-info/
+
+build/
+
+dist/
+
+# cookie file
+cookies
+
+# user account
+pixiv_user.json
